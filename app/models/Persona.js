@@ -61,16 +61,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     nombre: {
       type: DataTypes.STRING(100),
-      validate: {
-        isAlpha: {
-          args: true,
-          msg: 'El nombre solo puede contener letras'
-        },
-        len: {
-          args: [3, 100],
-          msg: 'El nombre debe contener entre 3 y 255  caracteres'
-        }
-      }
     },
     direccion: {
       type: DataTypes.STRING(200)
