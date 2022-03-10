@@ -4,7 +4,7 @@ const { Persona } = require("../models");
 const existePersonaPorId = async (id = '') => {
     const existe = await Persona.findByPk(id);
     if (!existe) {
-        throw new Error(`ID: ${id} no existe en la DB`);
+        throw new Error(`404, Persona no encontrada`);
     }
 };
 

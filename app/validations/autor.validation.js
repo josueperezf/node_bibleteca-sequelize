@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Autor } = require("../models");
+const { Autor, Persona } = require("../models");
 
 const existeAutorPorId = async (id = '') => {
     const existe = await Autor.findByPk(id);
