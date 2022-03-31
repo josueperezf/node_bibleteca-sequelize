@@ -8,17 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      pais_id: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: {
-            tableName: 'paises',
-            // schema: 'schema'
-          },
-          key: 'id'
-        },
-        allowNull: false,
-      },
       dni: {
         type: Sequelize.STRING(50),
         allowNull: false,

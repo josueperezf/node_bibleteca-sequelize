@@ -8,19 +8,24 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      persona_id: {
+      pais_id: {
         type: Sequelize.INTEGER,
-        unique : true,
         references: {
           model: {
-            tableName: 'personas',
+            tableName: 'paises',
             // schema: 'schema'
           },
           key: 'id'
         },
         allowNull: false,
-        onUpdate: 'cascade',
-        onDelete: 'cascade'
+      },
+      nombre: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      fecha_nacimiento: {
+        type: Sequelize.DATE,
+        allowNull: false,
       },
       biografia: {
         type: Sequelize.TEXT,

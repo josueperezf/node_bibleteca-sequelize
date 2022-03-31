@@ -1,5 +1,5 @@
 const { response, request } = require("express");
-const { Persona, Pais} = require("../models");
+const { Persona} = require("../models");
 
 const index = async (req = request, res=response) => {
     // parametros que puedan pasar, ejemplo ?pag=2 etc
@@ -15,15 +15,14 @@ const index = async (req = request, res=response) => {
     // where = {} listaria todo, seria un where sin condicion
     const estatus = (estado != 1 ) ? 0 : 1;
     const where = (todos) ? {} : {estatus};
-    const include = [{model: Pais, as: 'pais'}];
     const order = [
         ['id', 'DESC'],
         // ['name', 'ASC'],
     ];
     const [personas, total ] = await Promise.all([
        (todos)
-        ? Persona.scope({ method: ['buscar', query] }).findAll({ include, order})
-        : Persona.scope({ method: ['buscar', query] }).findAll({where, include, limit: parseInt(limit), offset: parseInt(offset), order}),
+        ? Persona.scope({ method: ['buscar', query] }).findAll({ order})
+        : Persona.scope({ method: ['buscar', query] }).findAll({where, limit: parseInt(limit), offset: parseInt(offset), order}),
         Persona.scope({ method: ['buscar', query] }).count({where})
     ]);
     return res.json({
@@ -33,11 +32,10 @@ const index = async (req = request, res=response) => {
 }
 
 const store = async (req = request, res=response) => {
-    const { pais_id, dni, nombre, direccion, fecha_nacimiento, telefono = ''}  = req.body;
-    // console.log({ pais_id, dni, nombre, direccion, fecha_nacimiento, telefono});
+    const { dni, nombre, direccion, fecha_nacimiento, telefono = ''}  = req.body;
     try {
         
-        const data = {pais_id, dni, nombre, direccion, fecha_nacimiento, telefono};
+        const data = {dni, nombre, direccion, fecha_nacimiento, telefono};
         const persona = await Persona.create(data);
         // await persona.save();
         res.status(201).json({
@@ -56,7 +54,9 @@ const store = async (req = request, res=response) => {
 
 const show = async (req = request, res=response) => {
     const {id} =  req.params;
-    const include = [{model: Pais, as: 'pais'}];
+    const include = [
+            // {model: Pais, as: 'pais'}
+        ];
     const persona = await Persona.findByPk(id,{include});
     res.status(200).json({
         ok: true,
@@ -66,8 +66,8 @@ const show = async (req = request, res=response) => {
 
 const update = async (req, res=response) => {
     const { id }   = req.params;
-    const {pais_id, dni, nombre, direccion, fecha_nacimiento, telefono = ''}  = req.body;
-    const data = { id, pais_id, dni, nombre, direccion, fecha_nacimiento, telefono};
+    const {dni, nombre, direccion, fecha_nacimiento, telefono = ''}  = req.body;
+    const data = { id, dni, nombre, direccion, fecha_nacimiento, telefono};
     try {
         const persona = await Persona.findByPk(id);
         await persona.update(data);

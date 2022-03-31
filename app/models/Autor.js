@@ -11,19 +11,31 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Autor.belongsTo(models.Persona, {
-        as: 'persona',
-        foreignKey:'persona_id',
+      Autor.belongsTo(models.Pais, {
+        as: 'pais',
+        foreignKey:'pais_id',
       });
 
       Autor.belongsToMany(models.Libro, { through: models.AutorLibro, as: 'libros', foreignKey:'autor_id' });
     }
   };
   Autor.init({
-    persona_id: {
+    pais_id: {
       type: DataTypes.INTEGER,
-      references: 'personas',
+      references: 'paises',
       referencesKey: 'id'
+    },
+    nombre: {
+      type: DataTypes.STRING(100),
+    },
+    fecha_nacimiento: {
+      type: DataTypes.DATE,
+      validate: {
+        isDate: {
+          args: true,
+          msg: 'La fecha de nacimiento es obligatoria'
+        }
+      }
     },
     biografia: DataTypes.TEXT,
     estatus: {

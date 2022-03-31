@@ -13,15 +13,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // console.log({models});
       // define association here
-      Persona.belongsTo(models.Pais, {
-        as: 'pais',
-        foreignKey:'pais_id',
-      });
-
-      Persona.hasOne(models.Autor, {
-        as: 'autor',
-        foreignKey:'persona_id',
-      });
 
       Persona.hasMany(models.Prestamo, {
         as: 'prestamos',
@@ -33,28 +24,23 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       /**SCOPE */
-      Persona.addScope('autores', ({value, order, limit, offset} ) => ({
-        include: [
-            {
-                model: models.Autor, as: 'autor', 
-                where: {
-                    persona_id: {[Op.not]: null}, 
-                    [Op.or]: [
-                      {'dni': {[Op.like]: `%${value}%`}},
-                      {'nombre': {[Op.like]: `%${value}%`}},
-                  ],
-                }
-            }
-        ],
-      }));
+      // Persona.addScope('autores', ({value, order, limit, offset} ) => ({
+      //   include: [
+      //       {
+      //           model: models.Autor, as: 'autor', 
+      //           where: {
+      //               persona_id: {[Op.not]: null}, 
+      //               [Op.or]: [
+      //                 {'dni': {[Op.like]: `%${value}%`}},
+      //                 {'nombre': {[Op.like]: `%${value}%`}},
+      //             ],
+      //           }
+      //       }
+      //   ],
+      // }));
     }
   };
   Persona.init({
-    pais_id: {
-      type: DataTypes.INTEGER,
-      references: 'paises',
-      referencesKey: 'id'
-    },
     dni: {
       type: DataTypes.STRING(50),
       allowNull: false,
