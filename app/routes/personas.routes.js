@@ -40,8 +40,8 @@ router.put('/:id',[
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existePersonaPorId),
     
-    check('pais_id', 'El pais de nacimiento es obligatorio').notEmpty().trim(),
-    check('pais_id', 'El pais de nacimiento no tiene valor valido').isNumeric(),
+    // check('pais_id', 'El pais de nacimiento es obligatorio').notEmpty().trim(),
+    // check('pais_id', 'El pais de nacimiento no tiene valor valido').isNumeric(),
     check('dni', 'El dni nombre es obligatorio').trim().notEmpty(),
     check('dni', 'El dni no tiene la longitud permitida').isLength({min:6, max:50}),
     check('dni').custom(uniquePersonaPorDNi ),
