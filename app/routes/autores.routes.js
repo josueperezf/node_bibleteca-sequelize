@@ -32,31 +32,6 @@ router.post('/',[
     validarCampos
 ], storeAutor );
 
-// almecena persona y autor simultaneamente
-router.post('/', [
-    // validarJWT,
-    check('pais_id', 'El pais de nacimiento es obligatorio').notEmpty().trim(),
-    check('pais_id', 'El pais de nacimiento no tiene valor valido').isNumeric(),
-    check('dni', 'El dni nombre es obligatorio').trim().notEmpty(),
-    check('dni', 'El dni no tiene la longitud permitida').isLength({min:6, max:50}),
-    check('dni').custom(uniquePersonaPorDNi ),
-    check('nombre', 'El nombre es obligatorio').trim().notEmpty(),
-    check('nombre', 'El nombre no tiene la longitud permitida').isLength({min:3, max:100}).toUpperCase(),
-    check('direccion', 'La dirección es obligatoria').trim().notEmpty(),
-    check('direccion', 'La dirección no tiene la longitud permitida').isLength({min:3, max:200}).toUpperCase(),
-    // check('telefono', 'El telefono es obligatorio').trim().notEmpty(),
-    // check('telefono', 'El telefono no tiene la longitud permitida').isLength({min:6, max:20}),
-    check('fecha_nacimiento', 'La fecha de nacimiento es obligatoria').trim().notEmpty(),
-    check('fecha_nacimiento', 'La fecha de nacimiento no es valida').isDate() ,
-    check('persona_id', 'La persona es obligatoria').notEmpty().trim(),
-    check('persona_id', 'persona no es valido').isNumeric(),
-    check('persona_id').custom(uniqueAutorPorPersonaId),
-    check('biografia', 'La biografia es obligatoria').trim().notEmpty(),
-    check('biografia', 'La biografia no tiene la longitud permitida').isLength({min:3, max:200}).toUpperCase(),
-    validarCampos
-], storePersonaAutor );
-
-
 // edita la tabla autor
 router.put('/:id',[
     // validarJWT,

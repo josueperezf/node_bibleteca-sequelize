@@ -55,39 +55,10 @@ const storeAutor = async (req = request, res=response) => {
     }
 }
 
-const storePersonaAutor = async (req = request, res=response) => {
-    const {pais_id, dni, nombre, direccion, fecha_nacimiento, telefono = '', persona_id, biografia}  = req.body;
-    try {
-        let data =  {pais_id, dni, nombre, direccion, fecha_nacimiento, telefono};
-        const persona = await Persona.create(data);
-        if (persona?.id) {
-            data = { persona_id: persona.id, biografia};
-            const autor = new Autor(data);
-            await autor.save ();
-            res.status(201).json({
-                ok: true,
-                autor,
-                msg: `Operación exitosa`
-            });
-        } else {
-            return res.status(500).json({
-                ok: false,
-                msg:'Hable con el administrador',
-            });
-        }
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({
-            ok: false,
-            msg:'Hable con el administrador',
-        });
-    }
-}
-
 const updateAutor = async (req, res=response) => {
     const { id }   = req.params;
-    const { persona_id, biografia}  = req.body;
-    const data = { persona_id, biografia};
+    const { pais_id, nombre, fecha_nacimiento, biografia}  = req.body;
+    const data = { pais_id, nombre, fecha_nacimiento, biografia};
     try {
         const autor = await Autor.findByPk(id);
         await autor.update(data);
