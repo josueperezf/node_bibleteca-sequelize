@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model, Op
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Autor extends Model {
@@ -17,6 +17,22 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Autor.belongsToMany(models.Libro, { through: models.AutorLibro, as: 'libros', foreignKey:'autor_id' });
+
+      /** SCOPES */
+      this.addScope('buscar', (value) => (
+        {
+            where: {
+                [Op.or]: [
+                    {nombre: {[Op.like]: `%${value}%`}},
+                    {'$pais.nombre$': {[Op.like]: `%${value}%`}},
+                ],
+            },
+            include: [
+                {model: models.Pais, as: 'pais'}
+            ],
+        })
+      );
+      
     }
   };
   Autor.init({

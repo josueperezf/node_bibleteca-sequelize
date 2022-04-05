@@ -21,11 +21,14 @@ router.get('/:id', [
 // almacena en la tabla autores
 router.post('/',[
     // validarJWT,
-    check('persona_id', 'La persona es obligatoria').notEmpty().trim(),
-    check('persona_id', 'persona no es valido').isNumeric(),
-    check('persona_id').custom(uniqueAutorPorPersonaId),
+    check('nombre', 'El nombre es obligatorio').trim().notEmpty(),
+    check('nombre', 'El nombre no tiene la longitud permitida').isLength({min:3, max:100}).toUpperCase(),
+    check('fecha_nacimiento', 'La fecha de nacimiento es obligatoria').trim().notEmpty(),
+    check('fecha_nacimiento', 'La fecha de nacimiento no es valida').isDate(),
+    check('pais_id', 'El pais de nacimiento es obligatorio').notEmpty().trim(),
+    check('pais_id', 'El pais de nacimiento no tiene valor valido').isNumeric(),
     check('biografia', 'La biografia es obligatoria').trim().notEmpty(),
-    check('biografia', 'La biografia no tiene la longitud permitida').isLength({min:3, max:200}).toUpperCase(),
+    check('biografia', 'La biografia no tiene la longitud permitida').isLength({min:3, max:250}).toUpperCase(),
     validarCampos
 ], storeAutor );
 
@@ -58,11 +61,14 @@ router.post('/', [
 router.put('/:id',[
     // validarJWT,
     check('id').custom(existeAutorPorId),
-    check('persona_id', 'La persona es obligatoria').notEmpty().trim(),
-    check('persona_id', 'persona no es valido').isNumeric(),
-    check('persona_id').custom(uniqueAutorPorPersonaId),
+    check('nombre', 'El nombre es obligatorio').trim().notEmpty(),
+    check('nombre', 'El nombre no tiene la longitud permitida').isLength({min:3, max:100}).toUpperCase(),
+    check('fecha_nacimiento', 'La fecha de nacimiento es obligatoria').trim().notEmpty(),
+    check('fecha_nacimiento', 'La fecha de nacimiento no es valida').isDate(),
+    check('pais_id', 'El pais de nacimiento es obligatorio').notEmpty().trim(),
+    check('pais_id', 'El pais de nacimiento no tiene valor valido').isNumeric(),
     check('biografia', 'La biografia es obligatoria').trim().notEmpty(),
-    check('biografia', 'La biografia no tiene la longitud permitida').isLength({min:3, max:200}).toUpperCase(),
+    check('biografia', 'La biografia no tiene la longitud permitida').isLength({min:3, max:250}).toUpperCase(),
     validarCampos
 ], updateAutor );
 

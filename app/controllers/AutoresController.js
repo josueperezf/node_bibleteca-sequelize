@@ -6,27 +6,13 @@ const indexAutor = async (req = request, res=response) => {
      // where = {} listaria todo, seria un where sin condicion
      const estatus = (estado != 1 ) ? 0 : 1;
      const where = (todos) ? {} : {estatus};
-     /**
-      * en el include lo que hago es que le digo a la consulta que traiga la relacion que tiene la tabla autor con persona,
-      * asi mismo, le digo que de persona, use el scope o metodo llamado 'buscar',
-      * este me ayuda a hacer las busquedas like de autores por nombre o cualquier otro campo,
-      * recordemos que estos valores estan el la tabla persona no en la autor, asi que es en persona donde debo buscar
-      * tambien, aprovecho y traigo la relacion que tiene persona con pais, para saber el pais de nacimiento del autor
-      */
-     const include = [
-        {  
-            model: Persona.scope({ method: ['buscar', query] }),
-            as: 'persona',
-            include: [ {model: Pais, as: 'pais'} ]
-        },
-     ];
      const order = [['id', 'DESC']];
      
      const [autores, total ] = await Promise.all([
         (todos)
-         ? Autor.scope(['autores', { method: ['buscar', query] }]).findAll({include, order})
-         : Autor.findAll({include, where, limit: parseInt(limit), offset: parseInt(offset), order}),
-         Autor.count({include, where})
+            ? Autor.scope({ method: ['buscar', query] }).findAll({ order})
+            : Autor.scope({ method: ['buscar', query] }).findAll({where, limit: parseInt(limit), offset: parseInt(offset), order}),
+        Autor.scope({ method: ['buscar', query] }).count({where})
      ]);
      return res.json({
         autores,
@@ -50,9 +36,9 @@ const showAutor = async (req = request, res=response) => {
 }
 
 const storeAutor = async (req = request, res=response) => {
-    const { persona_id, biografia}  = req.body;
+    const { pais_id, nombre, fecha_nacimiento, biografia}  = req.body;
     try {
-        const data = { persona_id, biografia};
+        const data = { pais_id, nombre, fecha_nacimiento, biografia};
         const autor = new Autor(data);
         await autor.save ();
         res.status(201).json({
