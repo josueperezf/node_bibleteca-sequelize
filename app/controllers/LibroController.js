@@ -3,26 +3,14 @@ const { Pais, Persona, Libro, Autor, Edicion, Idioma } = require("../models");
 
 const indexLibro = async (req = request, res = response) => {
     const {limite:limit = 10, desde:offset = 0, estado = 1, todos, query = ''} = req.query;
-    const order = [['titulo', 'DESC']];
+    const order = [['id', 'DESC']];
     const estatus = (estado != 1 ) ? 0 : 1;
     const where = (todos) ? {} : {estatus};
-    const include = [
-        {
-            model: Autor, as: 'autores',
-            include: [
-                {
-                    model: Persona.scope({ method: ['buscar', query] }),
-                    as: 'persona',
-                    include: [{model: Pais, as: 'pais'}]
-                }
-            ]
-        }
-    ];
     // const libros = await Libro.findAll({include, order });
     const [libros, total ] = await Promise.all([
         (todos)
-         ? Libro.scope({ method: ['buscar', query] }).findAll({ include, order})
-         : Libro.scope({ method: ['buscar', query] }).findAll({where, include, limit: parseInt(limit), offset: parseInt(offset), order}),
+         ? Libro.scope({ method: ['buscar', query] }).findAll({ order})
+         : Libro.scope({ method: ['buscar', query] }).findAll({where, limit: parseInt(limit), offset: parseInt(offset), order}),
         Libro.scope({ method: ['buscar', query] }).count({where})
      ]);
     return res.json({
@@ -57,13 +45,7 @@ const showLibro = async (req = request, res=response) => {
     const include = [
         {
             model: Autor, as: 'autores',
-            include: [
-                {
-                    model: Persona,
-                    as: 'persona',
-                    include: [{model: Pais, as: 'pais'}]
-                }
-            ]
+            include: [{model: Pais, as: 'pais'}]
         },
         {
             model: Edicion, as: 'ediciones',

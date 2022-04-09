@@ -24,7 +24,6 @@ const showAutor = async (req = request, res=response) => {
     const {id} =  req.params;
     // {model: Libro, as: 'libros' }, le debo colocar el mismo alias 'libros' que le coloque cuando cree su relacion de muchos a muchos
     const include = [
-        {model: Persona, as: 'persona', include: [ {model: Pais, as: 'pais'} ] },
         {model: Libro, as: 'libros' },
     ];
     // const persona = await Persona.findAll({include});
@@ -99,7 +98,6 @@ module.exports = {
     indexAutor,
     showAutor,
     storeAutor,
-    storePersonaAutor,
     updateAutor,
     destroyAutor
 };
