@@ -5,6 +5,7 @@ const rutas = [
     {path: '/api/autores',      route: require('./autores.routes'),     middlewareGlobals: [    ]},
     {path: '/api/copias',       route: require('./copias.routes'),      middlewareGlobals: [    ]},
     {path: '/api/ediciones',    route: require('./ediciones.routes'),   middlewareGlobals: [    ]},
+    {path: '/api/idiomas',      route: require('./idiomas.routes'),     middlewareGlobals: [    ]},
     {path: '/api/libros',       route: require('./libros.routes'),      middlewareGlobals: [    ]},
     {path: '/api/paises',       route: require('./pais.routes'),        middlewareGlobals: [    ]},
     {path: '/api/personas',     route: require('./personas.routes'),    middlewareGlobals: [    ]},
