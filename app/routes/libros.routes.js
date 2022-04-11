@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares');
 const { existeLibroPorId  } = require('../validations/libro.validation');
 const { existeTodosLosAutoresPorId  } = require('../validations/autor.validation');
-const { storeLibro, indexLibro, showLibro, updateLibro, destroyLibro } = require('../controllers/LibroController');
+const { storeLibro, indexLibro, showLibro, updateLibro, destroyLibro, editLibro } = require('../controllers/LibroController');
 const router = Router();
 
 // listar Libros
@@ -33,6 +33,14 @@ router.get('/:id', [
     check('id').custom(existeLibroPorId),
     validarCampos
 ], showLibro );
+
+// obtener libro por id para editar
+router.get('/edit/:id', [
+    check('id', 'El id es obligatorio').notEmpty().trim(),
+    check('id', 'El id no es valido').isNumeric(),
+    check('id').custom(existeLibroPorId),
+    validarCampos
+], editLibro );
 
 // actualizar Libro por id
 router.put('/:id',[

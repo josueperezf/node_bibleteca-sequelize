@@ -64,6 +64,21 @@ const showLibro = async (req = request, res=response) => {
     });
 }
 
+const editLibro = async (req = request, res=response) => {
+    const {id} =  req.params;
+    const include = [
+        {
+            model: Autor, as: 'autores',
+            attributes: ['id', 'nombre']
+        }
+    ];
+    const libro = await Libro.findByPk(id, {include });
+    res.status(200).json({
+        ok: true,
+        libro
+    });
+}
+
 const updateLibro = async (req, res=response) => {
     const { id }   = req.params;
     const {titulo}  = req.body;
@@ -109,6 +124,7 @@ module.exports = {
     indexLibro,
     storeLibro,
     showLibro,
+    editLibro,
     updateLibro,
     destroyLibro
 };
