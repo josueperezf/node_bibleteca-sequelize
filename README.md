@@ -69,7 +69,9 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 2. para correr podemos hacer:
 
         npx sequelize-cli db:seed:all para correr todos los seeder que existe (pero si ya ejecute un seed antes, al ejecutar esta linea, ejecuta todos los seed de nuevo)
-        npx sequelize-cli db:seed nombre-mi-seed.js (RECOMENDADA)
+        npx sequelize-cli db:seed nombre-mi-seed.js
+        Ejemplo: para correr un archivo en especifico (RECOMENDADA):
+        npx sequelize-cli db:seed --seed 20220411194726-create-idiomas.js
 
 
 
