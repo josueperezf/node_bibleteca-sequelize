@@ -1,5 +1,5 @@
 const { response, request } = require("express");
-const { Pais, Persona, Libro, Autor, Edicion, Idioma } = require("../models");
+const { Pais, Persona, Libro, Autor, Edicion, Idioma, AutorLibro } = require("../models");
 
 const indexLibro = async (req = request, res = response) => {
     const {limite:limit = 10, desde:offset = 0, estado = 1, todos, query = ''} = req.query;
@@ -19,6 +19,24 @@ const indexLibro = async (req = request, res = response) => {
         total
     });
 }
+// get libros por autor
+const getLibrosPorAutor = async (req = request, res = response) => {
+    const {autor_id: id} =  req.params;
+    const include = [
+        {
+            model: Libro, as: 'libros',
+            attributes: ['id', 'titulo', 'estatus']
+        },
+    ];
+    const autor = await Autor.findByPk(id, {include});
+    const libros = autor?.libros.map(({dataValues:{id, titulo, estatus}}) => ({id, titulo, estatus}) ) || [];
+    return  res.status(200).json({
+        ok: true,
+        libros,
+        total: libros.length 
+    });
+}
+
 const storeLibro = async (req = request, res=response) => {
     const { titulo }  = req.body;
     const autores = [...new Set(req.body.autores)];
@@ -122,6 +140,7 @@ const destroyLibro = async (req, res=response) => {
 }
 module.exports = {
     indexLibro,
+    getLibrosPorAutor,
     storeLibro,
     showLibro,
     editLibro,

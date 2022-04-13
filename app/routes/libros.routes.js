@@ -3,11 +3,14 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares');
 const { existeLibroPorId  } = require('../validations/libro.validation');
 const { existeTodosLosAutoresPorId  } = require('../validations/autor.validation');
-const { storeLibro, indexLibro, showLibro, updateLibro, destroyLibro, editLibro } = require('../controllers/LibroController');
+const { storeLibro, indexLibro, showLibro, updateLibro, destroyLibro, editLibro, getLibrosPorAutor } = require('../controllers/LibroController');
 const router = Router();
 
 // listar Libros
 router.get('/',indexLibro );
+
+// listar Libros asociados a un autor
+router.get('/por-autor/:autor_id',getLibrosPorAutor );
 
 
 // almacena un libro, debe pasar id de autores e idiomas en los que esta ese libro
