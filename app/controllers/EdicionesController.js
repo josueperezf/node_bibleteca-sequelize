@@ -1,5 +1,5 @@
 const { response, request } = require("express");
-const { Persona, Pais, Edicion, Idioma, Libro, Autor} = require("../models");
+const { Pais, Edicion, Idioma, Libro, Autor} = require("../models");
 
 const indexEdicion = async (req = request, res=response) => {
     const {limite:limit = 10, desde:offset = 0, estado = 1, todos, query = ''} = req.query;
@@ -54,13 +54,7 @@ const showEdicion = async (req = request, res=response) => {
             include: [
                 {
                     model: Autor, as: 'autores',
-                    include: [
-                        {
-                            model: Persona,
-                            as: 'persona',
-                            include: [{model: Pais, as: 'pais'}]
-                        }
-                    ]
+                    include: [{model: Pais, as: 'pais'}]
                 }
             ]
         },
