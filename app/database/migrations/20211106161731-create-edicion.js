@@ -30,6 +30,17 @@ module.exports = {
         },
         allowNull: false,
       },
+      autor_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'autores',
+            // schema: 'schema'
+          },
+          key: 'id'
+        },
+        allowNull: false,
+      },
       nombre: {
         type: Sequelize.STRING(100),
         allowNull: false,

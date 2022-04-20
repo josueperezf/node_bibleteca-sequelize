@@ -2,11 +2,14 @@ const { Router} = require('express');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares');
 const { uniqueEdicionPorIsbn, existeEdicionPorId  } = require('../validations/edicion.validation');
-const { storeEdicion, indexEdicion, showEdicion, updateEdicion, destroyEdicion } = require('../controllers/EdicionesController');
+const { storeEdicion, indexEdicion, showEdicion, updateEdicion, destroyEdicion, indexOnlyEdicion } = require('../controllers/EdicionesController');
 const router = Router();
 
 // listar Ediciones de un libro
 router.get('/',indexEdicion);
+
+// listar solo las Ediciones 
+router.get('/only', indexOnlyEdicion);
 
 // obtener una Edicion por id
 router.get('/:id', [
@@ -23,6 +26,8 @@ router.post('/',[
     check('idioma_id', 'El idioma no tiene valor valido').isNumeric(),
     check('libro_id', 'El libro es obligatorio').notEmpty().trim(),
     check('libro_id', 'El libro no tiene valor valido').isNumeric(),
+    check('autor_id', 'El autor es obligatorio').notEmpty().trim(),
+    check('autor_id', 'El autor no tiene valor valido').isNumeric(),
     check('nombre', 'El nombre es obligatorio').trim().notEmpty(),
     check('nombre', 'El nombre no tiene la longitud permitida').isLength({min:3, max:100}).toUpperCase(),
     check('fecha', 'La fecha de edicion es obligatoria').trim().notEmpty(),
@@ -42,6 +47,8 @@ router.put('/:id', [
 
     check('idioma_id', 'El idioma es obligatorio').notEmpty().trim(),
     check('idioma_id', 'El idioma no tiene valor valido').isNumeric(),
+    check('autor_id', 'El autor es obligatorio').notEmpty().trim(),
+    check('autor_id', 'El autor no tiene valor valido').isNumeric(),
     check('libro_id', 'El libro es obligatorio').notEmpty().trim(),
     check('libro_id', 'El libro no tiene valor valido').isNumeric(),
     check('nombre', 'El nombre es obligatorio').trim().notEmpty(),

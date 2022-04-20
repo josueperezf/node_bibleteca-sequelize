@@ -1,6 +1,14 @@
 const { response, request } = require("express");
 const { Pais, Edicion, Idioma, Libro, Autor} = require("../models");
 
+const indexOnlyEdicion = async (_, res=response) => {
+    const ediciones = await Edicion.findAll({where:{estatus: 1}})
+    return res.json({
+        ediciones,
+        total: ediciones.length
+    });
+}
+
 const indexEdicion = async (req = request, res=response) => {
     const {limite:limit = 10, desde:offset = 0, estado = 1, todos, query = ''} = req.query;
     // where = {} listaria todo, seria un where sin condicion
@@ -27,9 +35,9 @@ const indexEdicion = async (req = request, res=response) => {
 }
 
 const storeEdicion = async (req = request, res=response) => {
-    const { idioma_id, libro_id, nombre, fecha, isbn, numero_paginas, tipo = 1 }  = req.body;
+    const { idioma_id, libro_id, autor_id, nombre, fecha, isbn, numero_paginas, tipo = 1 }  = req.body;
     try {
-        const data = {idioma_id, libro_id, nombre, fecha, isbn, numero_paginas, tipo };
+        const data = {idioma_id, libro_id, autor_id, nombre, fecha, isbn, numero_paginas, tipo };
         const edicion = await Edicion.create(data);
         res.status(201).json({
             ok: true,
@@ -68,8 +76,8 @@ const showEdicion = async (req = request, res=response) => {
 
 const updateEdicion = async (req, res=response) => {
     const { id }   = req.params;
-    const { idioma_id, libro_id, nombre, fecha, isbn, numero_paginas, tipo = 1 }  = req.body;
-    const data = { idioma_id, libro_id, nombre, fecha, isbn, numero_paginas, tipo };
+    const { idioma_id, libro_id, autor_id, nombre, fecha, isbn, numero_paginas, tipo = 1 }  = req.body;
+    const data = { idioma_id, libro_id, autor_id, nombre, fecha, isbn, numero_paginas, tipo };
     try {
         const edicion = await Edicion.findByPk(id);
         await edicion.update(data);
@@ -107,6 +115,7 @@ const destroyEdicion = async (req, res=response) => {
 }
 
 module.exports = {
+    indexOnlyEdicion,
     indexEdicion,
     storeEdicion,
     showEdicion,
