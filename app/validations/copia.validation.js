@@ -7,7 +7,23 @@ const existeCopiaPorId = async (id = '') => {
         throw new Error(`ID: ${id} no existe en la DB`);
     }
 };
-
+const uniqueCopiaPorCodigo = async (codigo, {req}) => {
+    // tambien puedo tomar el body con todos lo que envie el formulario
+    const {params, method } = req;
+    let existe =  null;
+    if (method === 'POST') {
+        existe = await Copia.findOne({where: {codigo}});
+    }
+    if (method === 'PUT') {
+        const {id} = params;
+        if (id) {
+            existe = await Copia.findOne({where: [{codigo, id: {[Op.ne]: id } }] });
+        }
+    }
+    if (existe) {
+        throw new Error(`El codigo: ${codigo} ya esta en uso`);
+    }
+}
 
 // prestamo, copias disponibles para prestar
 const disponiblesTodasLasCopiasPorId = async (copias = [], {req} ) => {
@@ -47,5 +63,6 @@ const disponiblesTodasLasCopiasPorId = async (copias = [], {req} ) => {
 
 module.exports = {
     existeCopiaPorId,
+    uniqueCopiaPorCodigo,
     disponiblesTodasLasCopiasPorId
 };

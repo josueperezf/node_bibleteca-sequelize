@@ -1,7 +1,7 @@
 const { Router} = require('express');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares');
-const { existeCopiaPorId  } = require('../validations/copia.validation');
+const { existeCopiaPorId, uniqueCopiaPorCodigo  } = require('../validations/copia.validation');
 const { storeCopia, indexCopia, showCopia, updateCopia, destroyCopia } = require('../controllers/CopiasController');
 const router = Router();
 
@@ -23,6 +23,7 @@ router.post('/',[
     check('edicion_id', 'El pais de nacimiento no tiene valor valido').notEmpty().isNumeric(),
     check('codigo', 'El codigo es obligatorio').trim().notEmpty(),
     check('codigo', 'El codigo tiene la longitud permitida').isLength({min:3, max:50}),
+    check('codigo').custom(uniqueCopiaPorCodigo ),
     check('serial', 'El serial es obligatorio').trim().notEmpty(),
     check('serial', 'El serial tiene la longitud permitida').isLength({min:3, max:50}),
 
@@ -37,6 +38,7 @@ router.put('/:id',[
     check('edicion_id', 'El pais de nacimiento no tiene valor valido').notEmpty().isNumeric(),
     check('codigo', 'El codigo es obligatorio').trim().notEmpty(),
     check('codigo', 'El codigo tiene la longitud permitida').isLength({min:3, max:50}),
+    check('codigo').custom(uniqueCopiaPorCodigo ),
     check('serial', 'El serial es obligatorio').trim().notEmpty(),
     check('serial', 'El serial tiene la longitud permitida').isLength({min:3, max:50}),
 
