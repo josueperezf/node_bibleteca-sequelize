@@ -1,5 +1,6 @@
+const { Op } = require('sequelize');
 const { response, request } = require("express");
-const { Persona} = require("../models");
+const { Persona, Usuario} = require("../models");
 
 const index = async (req = request, res=response) => {
     // parametros que puedan pasar, ejemplo ?pag=2 etc
@@ -64,6 +65,54 @@ const show = async (req = request, res=response) => {
     });
 }
 
+const showPorRut = async (req = request, res=response) => {
+    const {dni} =  req.params;
+    const persona = await Persona.findOne({ where: { dni } });
+    
+    if(!persona) {
+        return res.status(400).json({
+            errors: [
+                {
+                    param: 'dni',
+                    msg: 'DNI no encontrado'
+                }
+            ]
+        });
+    }
+    res.status(200).json({
+        ok: true,
+        persona
+    });
+}
+
+const showPorRutSinUsuario = async (req = request, res=response) => {
+    const {dni} =  req.params;
+    let ids = [];
+    const usuarios =  await Usuario.findAll({attributes: ['id']});
+    if (usuarios && usuarios.length > 0) {
+        ids = usuarios.map((u)=> (u.id));
+    }
+    const where = [    
+        {dni},
+        {id: {[Op.notIn]: ids }}
+    ];
+    const persona = await Persona.findOne({where});
+    
+    if(!persona || persona.length === 0) {
+        return res.status(400).json({
+            errors: [
+                {
+                    param: 'dni',
+                    msg: 'DNI no encontrado'
+                }
+            ]
+        });
+    }
+    res.status(200).json({
+        ok: true,
+        persona
+    });
+}
 const update = async (req, res=response) => {
     const { id }   = req.params;
     const {dni, nombre, direccion, fecha_nacimiento, telefono = ''}  = req.body;
@@ -108,6 +157,8 @@ module.exports = {
     index,
     store,
     show,
+    showPorRut,
+    showPorRutSinUsuario,
     update,
     destroy
 };

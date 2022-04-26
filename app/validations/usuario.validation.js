@@ -1,5 +1,5 @@
 const { Op } = require('sequelize');
-const { Usuario } = require('../models');
+const { Usuario, Persona } = require('../models');
 
 const uniquePersonaPorUsuarioId = async (persona_id, {req}) => {
     // tambien puedo tomar el body con todos lo que envie el formulario
@@ -22,6 +22,23 @@ const uniquePersonaPorUsuarioId = async (persona_id, {req}) => {
         throw new Error(`La persona: ${persona.nombre || persona_id } ya posee cuenta de usuario`);
     }
 }
+const uniqueLogin = async (login, {req}) => {
+    // tambien puedo tomar el body con todos lo que envie el formulario
+    const {params, method } = req;
+    let existe =  null;
+    if (method === 'POST') {
+        existe = await Usuario.findOne({where: {login}});
+    }
+    if (method === 'PUT') {
+        const {id} = params;
+        if (id) {
+            existe = await Usuario.findOne({where: [{login, id: {[Op.ne]: id } }] });
+        }
+    }
+    if (existe) {
+        throw new Error(`El login o correo  ya esta en uso`);
+    }
+}
 
 const existeUsuarioPorId = async (id = '') => {
     const existe = await Usuario.findByPk(id);
@@ -31,6 +48,7 @@ const existeUsuarioPorId = async (id = '') => {
 };
 
 module.exports = {
+    existeUsuarioPorId,
+    uniqueLogin,
     uniquePersonaPorUsuarioId,
-    existeUsuarioPorId
 };

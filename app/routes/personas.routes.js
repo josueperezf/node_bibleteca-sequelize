@@ -1,8 +1,8 @@
 const { Router} = require('express');
 const { check } = require('express-validator');
-const { validarCampos } = require('../middlewares');
-const { store, index, show, update, destroy } = require('../controllers/PersonaController');
-const { existePersonaPorId, uniquePersonaPorDNi  } = require('../validations/persona.validation');
+const { validarCampos, validarJWT } = require('../middlewares');
+const { store, index, show, update, destroy, showPorRut, showPorRutSinUsuario } = require('../controllers/PersonaController');
+const { existePersonaPorId, uniquePersonaPorDNi, existePersonaActivaPorDNI  } = require('../validations/persona.validation');
 const router = Router();
 
 // listar categorias
@@ -10,15 +10,33 @@ router.get('/',index);
 
 // obtener una Persona por id
 router.get('/:id', [
+    validarJWT,
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existePersonaPorId),
     validarCampos
 ], show);
 
+// obtener una Persona por dni o rut, debe ir tal como esta en la base de datos con o sin puntos
+router.get('/dni/:dni', [
+    validarJWT,
+    check('dni', 'El un persona con el dni ingresado').notEmpty().trim(),
+    check('dni').custom(existePersonaActivaPorDNI),
+    validarCampos
+], showPorRut);
+
+// obtener una Persona por dni o rut que no tengan cuenta de usuario
+// su => es para decir sin usuario, no se me ocurrio nada mas y queria url corta
+router.get('/su/dni/:dni', [
+    validarJWT,
+    check('dni', 'El un persona con el dni ingresado').notEmpty().trim(),
+    check('dni').custom(existePersonaActivaPorDNI),
+    validarCampos
+], showPorRutSinUsuario);
+
 // almacena en la tabla persona
 router.post('/',[
-    // validarJWT,
+    validarJWT,
     check('dni', 'El dni nombre es obligatorio').trim().notEmpty(),
     check('dni', 'El dni no tiene la longitud permitida').isLength({min:6, max:50}),
     check('dni').custom(uniquePersonaPorDNi ),
@@ -35,7 +53,7 @@ router.post('/',[
 
 // actualizar persona por id
 router.put('/:id',[
-    // validarJWT,
+    validarJWT,
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existePersonaPorId),
@@ -59,10 +77,10 @@ router.put('/:id',[
 
 // Borrar una logicamente una persona
 router.delete('/:id',[
+    validarJWT,
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existePersonaPorId),
-    // validarJWT,
     // esAdminRole,
     validarCampos
 ], destroy);

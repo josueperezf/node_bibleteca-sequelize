@@ -8,7 +8,7 @@ const esAdminRole = async (req, res = response, next )=>{
             msg: 'Se quiere verificar el rol sin validar el token primero'
         });
     }
-    console.log({aqui: req.usuario});
+    // console.log({aqui: req.usuario});
     const {tipo_usuario_id, login } = req.usuario;
     if (tipo_usuario_id !== TIPO_USUARIO.ADMINISTRADOR) {
         return res.status(401).json({

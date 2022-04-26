@@ -17,6 +17,13 @@ const existePersonaActivaPorId = async (id = '') => {
     }
 };
 
+const existePersonaActivaPorDNI = async (dni = '') => {
+    const existe = await Persona.findOne({where: {dni,estatus:1}} );
+    if (!existe) {
+        throw new Error(`El RUT no existe o no esta disponible`);
+    }
+};
+
 const uniquePersonaPorDNi = async (dni, {req}) => {
     // tambien puedo tomar el body con todos lo que envie el formulario
     const {params, method } = req;
@@ -37,7 +44,8 @@ const uniquePersonaPorDNi = async (dni, {req}) => {
 
 
 module.exports = {
-    existePersonaPorId,
+    existePersonaActivaPorDNI,
     existePersonaActivaPorId,
+    existePersonaPorId,
     uniquePersonaPorDNi
 };

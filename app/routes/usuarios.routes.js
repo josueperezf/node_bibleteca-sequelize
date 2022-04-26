@@ -1,7 +1,7 @@
 const { Router} = require('express');
 const { check } = require('express-validator');
-const { validarCampos, esAdminRole } = require('../middlewares');
-const { uniquePersonaPorUsuarioId, existeUsuarioPorId  } = require('../validations/usuario.validation');
+const { validarCampos, esAdminRole, validarJWT } = require('../middlewares');
+const { uniquePersonaPorUsuarioId, existeUsuarioPorId, uniqueLogin  } = require('../validations/usuario.validation');
 const { existePersonaActivaPorId  } = require('../validations/persona.validation');
 
 const { indexUsuario, showUsuario, storeUsuario, destroyUsuario, updateUsuario, restartUsuario } = require('../controllers/UsuarioController');
@@ -21,12 +21,13 @@ router.get('/:id', [
 
 // almacena en la tabla usuario
 router.post('/', [
-    // validarJWT,
+    validarJWT,
     check('persona_id', 'La persona requerida').isNumeric(),
     check('persona_id').custom(existePersonaActivaPorId),
     check('persona_id').custom(uniquePersonaPorUsuarioId),
     check('login', 'El dni nombre es obligatorio').trim().notEmpty(),
     check('login', 'El dni no tiene la longitud permitida').isLength({min:10, max:50}),
+    check('login').custom(uniqueLogin),
     check('password', 'El password es obligatorio').trim().notEmpty(),
     check('password', 'El password no tiene la longitud permitida').isLength({min:4, max:10}).toUpperCase(),
     esAdminRole,
