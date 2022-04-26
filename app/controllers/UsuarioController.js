@@ -1,3 +1,4 @@
+
 const { response, request } = require("express");
 const { Persona, Pais, Usuario, TipoUsuario} = require("../models");
 const bcryptjs = require('bcryptjs');
@@ -67,16 +68,64 @@ const showUsuario = async (req = request, res=response) => {
 const updateUsuario = async (req, res=response) => {
     const { id }   = req.params;
     const { tipo_usuario_id = 2, persona_id, login}  = req.body;
-    let { password}  = req.body;
     const data = { tipo_usuario_id, persona_id, login };
-    if (password && (password.length >= 4 && password.length <= 10 ) ) {
-        const salt = bcryptjs.genSaltSync(10);
-        data.password = bcryptjs.hashSync(password,salt);
-    }
 
     try {
         const usuario = await Usuario.findByPk(id);
         await usuario.update(data);
+        res.status(200).json({
+            ok: true,
+            msg: `Operacion Exitosa`,
+            usuario
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        })    
+    }  
+}
+
+const updatePassword = async (req, res=response) => {
+    try {
+        const { id }   = req.params;
+        let { password, newPassword}  = req.body;
+        const  { id: idUsuarioLogueado} = req.usuario;
+
+        if (id != idUsuarioLogueado) {
+            return res.status(401).json({
+                errors: [
+                    {
+                        param: 'password',
+                        msg: 'No autorizado'
+                    }
+                ]
+            });
+        }
+        const usuario = await Usuario.findByPk(id);
+        
+        // verificar contraseña
+        const validPassword = bcryptjs.compareSync(password, usuario.password);
+        if(!validPassword) {
+            return res.status(400).json({
+                errors: [
+                    {
+                        param: 'password',
+                        msg: 'Password actual incorrecto'
+                    }
+                ]
+            });
+        }
+
+        // encriptamos el nuevo password
+        if (newPassword && (newPassword.length >= 4 && newPassword.length <= 10 ) ) {
+            const salt = bcryptjs.genSaltSync(10);
+            newPassword = bcryptjs.hashSync(newPassword, salt);
+        }
+
+    
+        await usuario.update({password: newPassword});
         res.status(200).json({
             ok: true,
             msg: `Operacion Exitosa`,
@@ -134,6 +183,7 @@ module.exports = {
     storeUsuario,
     showUsuario,
     updateUsuario,
+    updatePassword,
     destroyUsuario,
     restartUsuario
 };
