@@ -55,8 +55,9 @@ const store = async (req = request, res=response) => {
 
 const show = async (req = request, res=response) => {
     const {id} =  req.params;
+    // through
     const include = [
-            // {model: Pais, as: 'pais'}
+            {model: Usuario, as: 'usuario', attributes: {exclude: ['password']}},
         ];
     const persona = await Persona.findByPk(id,{include});
     res.status(200).json({
