@@ -1,5 +1,5 @@
 const { response, request } = require("express");
-const { Pais, Persona, Libro, Autor, Edicion, Idioma, AutorLibro } = require("../models");
+const { Pais, Libro, Autor, Edicion, Idioma } = require("../models");
 
 const indexLibro = async (req = request, res = response) => {
     const {limite:limit = 10, desde:offset = 0, estado = 1, todos, query = ''} = req.query;

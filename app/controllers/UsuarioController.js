@@ -1,6 +1,6 @@
 
 const { response, request } = require("express");
-const { Persona, Pais, Usuario, TipoUsuario} = require("../models");
+const { Persona, Usuario, TipoUsuario} = require("../models");
 const bcryptjs = require('bcryptjs');
 
 

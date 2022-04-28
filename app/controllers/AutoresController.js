@@ -1,5 +1,5 @@
 const { response, request } = require("express");
-const { Autor, Persona, Pais, Libro} = require("../models");
+const { Autor, Libro} = require("../models");
 
 const indexAutor = async (req = request, res=response) => {
      const {limite:limit = 10, desde:offset = 0, estado = 1, todos, query = ''} = req.query;
@@ -26,7 +26,6 @@ const showAutor = async (req = request, res=response) => {
     const include = [
         {model: Libro, as: 'libros' },
     ];
-    // const persona = await Persona.findAll({include});
     const autor = await Autor.findByPk(id, {include});
     return  res.status(200).json({
         ok: true,
