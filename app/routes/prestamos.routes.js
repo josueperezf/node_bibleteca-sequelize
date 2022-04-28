@@ -19,6 +19,8 @@ router.get('/:id', [
 ], showPrestamo);
 
 // almacena en la tabla Prestamo
+// validarJWT lo tengo comentado, ya que en el archivo index.router tengo un middleware que es global para cada metodo de la ruta,
+// asi que mejor colocarlo alli en en cada uno de las rutas del router
 router.post('/',[
     // validarJWT,
     check('persona_id', 'El pais de nacimiento no tiene valor valido').notEmpty().isNumeric(),

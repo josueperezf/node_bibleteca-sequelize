@@ -1,6 +1,6 @@
 const { Router} = require('express');
 const { check } = require('express-validator');
-const { validarCampos, validarJWT } = require('../middlewares');
+const { validarCampos, esAdminRole } = require('../middlewares');
 const { store, index, show, update, destroy, showPorRut, showPorRutSinUsuario } = require('../controllers/PersonaController');
 const { existePersonaPorId, uniquePersonaPorDNi, existePersonaActivaPorDNI  } = require('../validations/persona.validation');
 const router = Router();
@@ -9,8 +9,10 @@ const router = Router();
 router.get('/',index);
 
 // obtener una Persona por id
+// validarJWT lo tengo comentado, ya que en el archivo index.router tengo un middleware que es global para cada metodo de la ruta,
+// asi que mejor colocarlo alli en en cada uno de las rutas del router
 router.get('/:id', [
-    validarJWT,
+    // validarJWT,
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existePersonaPorId),
@@ -19,7 +21,7 @@ router.get('/:id', [
 
 // obtener una Persona por dni o rut, debe ir tal como esta en la base de datos con o sin puntos
 router.get('/dni/:dni', [
-    validarJWT,
+    // validarJWT,
     check('dni', 'El un persona con el dni ingresado').notEmpty().trim(),
     check('dni').custom(existePersonaActivaPorDNI),
     validarCampos
@@ -28,7 +30,6 @@ router.get('/dni/:dni', [
 // obtener una Persona por dni o rut que no tengan cuenta de usuario
 // su => es para decir sin usuario, no se me ocurrio nada mas y queria url corta
 router.get('/su/dni/:dni', [
-    validarJWT,
     check('dni', 'El un persona con el dni ingresado').notEmpty().trim(),
     check('dni').custom(existePersonaActivaPorDNI),
     validarCampos
@@ -36,7 +37,6 @@ router.get('/su/dni/:dni', [
 
 // almacena en la tabla persona
 router.post('/',[
-    validarJWT,
     check('dni', 'El dni nombre es obligatorio').trim().notEmpty(),
     check('dni', 'El dni no tiene la longitud permitida').isLength({min:6, max:50}),
     check('dni').custom(uniquePersonaPorDNi ),
@@ -53,13 +53,9 @@ router.post('/',[
 
 // actualizar persona por id
 router.put('/:id',[
-    validarJWT,
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existePersonaPorId),
-    
-    // check('pais_id', 'El pais de nacimiento es obligatorio').notEmpty().trim(),
-    // check('pais_id', 'El pais de nacimiento no tiene valor valido').isNumeric(),
     check('dni', 'El dni nombre es obligatorio').trim().notEmpty(),
     check('dni', 'El dni no tiene la longitud permitida').isLength({min:6, max:50}),
     check('dni').custom(uniquePersonaPorDNi ),
@@ -76,12 +72,12 @@ router.put('/:id',[
 ],update);
 
 // Borrar una logicamente una persona
+// esAdminRole solo el administrado puede borrar
 router.delete('/:id',[
-    validarJWT,
+    esAdminRole,
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existePersonaPorId),
-    // esAdminRole,
     validarCampos
 ], destroy);
 

@@ -1,6 +1,6 @@
 const { Router} = require('express');
 const { check } = require('express-validator');
-const { validarCampos } = require('../middlewares');
+const { validarCampos, esAdminRole } = require('../middlewares');
 const { existeCopiaPorId, uniqueCopiaPorCodigo  } = require('../validations/copia.validation');
 const { storeCopia, indexCopia, showCopia, updateCopia, destroyCopia } = require('../controllers/CopiasController');
 const router = Router();
@@ -17,7 +17,8 @@ router.get('/:id', [
 ], showCopia);
 
 // almacena en la tabla copias
-
+// validarJWT lo tengo comentado, ya que en el archivo index.router tengo un middleware que es global para cada metodo de la ruta,
+// asi que mejor colocarlo alli en en cada uno de las rutas del router
 router.post('/',[
     // validarJWT,
     check('edicion_id', 'El pais de nacimiento no tiene valor valido').notEmpty().isNumeric(),
@@ -26,7 +27,6 @@ router.post('/',[
     check('codigo').custom(uniqueCopiaPorCodigo ),
     check('serial', 'El serial es obligatorio').trim().notEmpty(),
     check('serial', 'El serial tiene la longitud permitida').isLength({min:3, max:50}),
-
     validarCampos
 ], storeCopia );
 
@@ -41,17 +41,17 @@ router.put('/:id',[
     check('codigo').custom(uniqueCopiaPorCodigo ),
     check('serial', 'El serial es obligatorio').trim().notEmpty(),
     check('serial', 'El serial tiene la longitud permitida').isLength({min:3, max:50}),
-
     validarCampos
 ], updateCopia);
 
 // Borrar una logicamente una Copia
+// esAdminRole solo el administrado puede borrar
 router.delete('/:id',[
+    esAdminRole,
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existeCopiaPorId),
     // validarJWT,
-    // esAdminRole,
     validarCampos
 ], destroyCopia );
 

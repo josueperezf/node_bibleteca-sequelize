@@ -1,9 +1,8 @@
 const { Router} = require('express');
 const { check } = require('express-validator');
-const { validarCampos } = require('../middlewares');
-const { existeAutorPorId, uniqueAutorPorPersonaId } = require('../validations/autor.validation');
-const { uniquePersonaPorDNi } = require('../validations/persona.validation');
-const { indexAutor, showAutor, storeAutor, storePersonaAutor, destroyAutor, updateAutor } = require('../controllers/AutoresController');
+const { validarCampos, esAdminRole } = require('../middlewares');
+const { existeAutorPorId } = require('../validations/autor.validation');
+const { indexAutor, showAutor, storeAutor, destroyAutor, updateAutor } = require('../controllers/AutoresController');
 const router = Router();
 
 
@@ -19,6 +18,8 @@ router.get('/:id', [
 ], showAutor );
 
 // almacena en la tabla autores
+// validarJWT lo tengo comentado, ya que en el archivo index.router tengo un middleware que es global para cada metodo de la ruta,
+// asi que mejor colocarlo alli en en cada uno de las rutas del router
 router.post('/',[
     // validarJWT,
     check('nombre', 'El nombre es obligatorio').trim().notEmpty(),
@@ -48,13 +49,13 @@ router.put('/:id',[
 ], updateAutor );
 
 // Borrar una logicamente un autor
+//esAdminRole se ejecuta despues del middleware global que tengo que verifica si tiene un token valido
 router.delete('/:id',[
+    esAdminRole,
     check('id').custom(existeAutorPorId),
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existeAutorPorId ),
-    // validarJWT,
-    // esAdminRole,
     validarCampos
 ], destroyAutor );
 module.exports = router;

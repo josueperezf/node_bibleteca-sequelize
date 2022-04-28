@@ -1,6 +1,6 @@
 const { Router} = require('express');
 const { check } = require('express-validator');
-const { validarCampos } = require('../middlewares');
+const { validarCampos, esAdminRole } = require('../middlewares');
 const { uniqueEdicionPorIsbn, existeEdicionPorId  } = require('../validations/edicion.validation');
 const { storeEdicion, indexEdicion, showEdicion, updateEdicion, destroyEdicion, indexOnlyEdicion } = require('../controllers/EdicionesController');
 const router = Router();
@@ -20,6 +20,8 @@ router.get('/:id', [
 ], showEdicion);
 
 // almacena en la tabla ediciones
+// validarJWT lo tengo comentado, ya que en el archivo index.router tengo un middleware que es global para cada metodo de la ruta,
+// asi que mejor colocarlo alli en en cada uno de las rutas del router
 router.post('/',[
     // validarJWT,
     check('idioma_id', 'El idioma es obligatorio').notEmpty().trim(),
@@ -63,7 +65,9 @@ router.put('/:id', [
 ], updateEdicion );
 
 // Borrar una logicamente una edicion
+// esAdminRole solo el administrado puede borrar
 router.delete('/:id',[
+    esAdminRole,
     check('id', 'El id es obligatorio').notEmpty().trim(),
     check('id', 'El id no es valido').isNumeric(),
     check('id').custom(existeEdicionPorId),
