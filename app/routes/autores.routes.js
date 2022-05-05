@@ -3,6 +3,7 @@ const { check } = require('express-validator');
 const { validarCampos, esAdminRole } = require('../middlewares');
 const { existeAutorPorId } = require('../validations/autor.validation');
 const { indexAutor, showAutor, storeAutor, destroyAutor, updateAutor } = require('../controllers/AutoresController');
+const { existePaisActivoPorId } = require('../validations/pais.validation');
 const router = Router();
 
 
@@ -28,6 +29,7 @@ router.post('/',[
     check('fecha_nacimiento', 'La fecha de nacimiento no es valida').isDate(),
     check('pais_id', 'El pais de nacimiento es obligatorio').notEmpty().trim(),
     check('pais_id', 'El pais de nacimiento no tiene valor valido').isNumeric(),
+    check('pais_id').custom(existePaisActivoPorId),
     check('biografia', 'La biografia es obligatoria').trim().notEmpty(),
     check('biografia', 'La biografia no tiene la longitud permitida').isLength({min:3, max:250}).toUpperCase(),
     validarCampos
@@ -43,6 +45,7 @@ router.put('/:id',[
     check('fecha_nacimiento', 'La fecha de nacimiento no es valida').isDate(),
     check('pais_id', 'El pais de nacimiento es obligatorio').notEmpty().trim(),
     check('pais_id', 'El pais de nacimiento no tiene valor valido').isNumeric(),
+    check('pais_id').custom(existePaisActivoPorId),
     check('biografia', 'La biografia es obligatoria').trim().notEmpty(),
     check('biografia', 'La biografia no tiene la longitud permitida').isLength({min:3, max:250}).toUpperCase(),
     validarCampos
