@@ -17,6 +17,7 @@ const validarCampos = (req, res, next)=>{
             }
         });
         if (e404) {
+            // debo retornar mejor un objeto que un string, pero ya por ahora lo dejare asi
             return res.status(404).json(msg404);
         }
         return res.status(400).json(errores);
