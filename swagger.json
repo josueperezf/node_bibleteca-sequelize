@@ -1,0 +1,478 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Biblioteca con node y sequelize",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{port}/api/",
+      "description": "Servidor local",
+      "variables": {
+        "port":{
+          "default": "8080"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/autores": {
+      "get": {
+        "tags": ["Autor"],
+        "summary": "Listar autores",
+        "responses": {
+          "200": {
+            "description": "Operacion Exitosa!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "autores": {
+                      "type":"array",
+                      "items":{
+                        "$ref": "#/components/schemas/AutorResponse"
+                      }
+                    },
+                    "total": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401":{
+            "description": "No autorizado, no hay token o ha expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Autor"],
+        "summary": "Nuevo autor",
+        "requestBody": {
+          "description": "Objeto de autor para agregar a la tienda",
+          "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/Autor"
+                  },
+                  "examples": {
+                      "autor del principitp": {
+                          "summary": "Ejemplo de registrar al autor del libro ´El Principito´",
+                          "description": "Ejemplo con datos de autor precargados",
+                          "value": {
+                              "pais_id": 66,
+                              "nombre": "Antoine de Saint-Exupéry",
+                              "fecha_nacimiento": "1900-06-29",
+                              "biografia": "El 29 de junio de 1900 nació el novelista y aviador francés. Quedó huérfano de padre a la temprana edad de 4 años y se crio en el entorno femenino de una familia aristocrática de la ciudad de Lyon (donde su madre trabajaba como enfermera)"
+                          }
+                      }
+                  }
+              }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "autor": {
+                      "$ref": "#/components/schemas/Autor"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/autores/{id}": {
+      "get": {
+        "tags": ["Autor"],
+        "summary": "Ver un Autor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema":{"type": "integer"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operacion Exitosa!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "ok": {
+                          "type": "boolean"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "autor": {
+                          "type": "object",
+                          "allOf": [
+                            { "type": "number", "properties": { "id":{ "type": "number"} } },
+                            {"$ref": "#/components/schemas/Autor"},
+                            { "type": "array", "properties":{ "libros": { "items":{"$ref": "#/components/schemas/Libro"} }}}
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "401":{
+            "description": "No autorizado, no hay token o ha expirado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Autor"],
+        "summary": "editar autor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema":{"type": "integer"}
+          }
+        ],
+        "requestBody": {
+          "description": "Objeto de autor para editar sus campos",
+          "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/Autor"
+                  },
+                  "examples": {
+                      "autor del principitp": {
+                          "summary": "Ejemplo editar al autor del libro ´El Principito´",
+                          "description": "Ejemplo con datos de autor precargados",
+                          "value": {
+                              "pais_id": 66,
+                              "nombre": "Antoine de Saint-Exupéry",
+                              "fecha_nacimiento": "1900-06-29",
+                              "biografia": "El 29 de junio de 1900 nació el novelista y aviador francés. Quedó huérfano de padre a la temprana edad de 4 años y se crio en el entorno femenino de una familia aristocrática de la ciudad de Lyon (donde su madre trabajaba como enfermera)"
+                          }
+                      }
+                  }
+              }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean"
+                    },
+                    "autor": {
+                      "$ref": "#/components/schemas/Autor"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Usuario"],
+        "summary": "Iniciar Sesion",
+        "requestBody": {
+          "description": "Objeto para obtener el token de acceso para la aplicacion",
+          "content": {
+              "application/json": {
+                  "schema": {
+                      "$ref": "#/components/schemas/Autor"
+                  },
+                  "examples": {
+                      "mi-cuenta": {
+                          "summary": "Iniciar usuario de prueba",
+                          "description": "inicia sesion con un usuario ya registrado desde react, el registro solo lo puede hacer un administrador",
+                          "value": {
+                              "login": "josueperezf@gmail.com",
+                              "password": "123456"
+                          }
+                      }
+                  }
+              }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Operacion Exitosa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "usuario": {
+                      "allOf":[
+                        {"properties": { "id":{"type": "integer"} }},
+                        {"$ref": "#/components/schemas/Usuario"},
+                        {"properties": {
+                          "persona": { "type": "object", "allOf": [
+                              {"properties": { "id":{"type": "integer"} }},
+                              {"$ref": "#/components/schemas/Persona"}
+                            ] }
+                          }
+                        },
+                        {"properties": { "tipo_usuario":{"type": "object", "$ref": "#/components/schemas/TipoUsuario"} }}
+                      ]
+                    },
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400":{
+            "description": "Datos erroneos, verificar e intentar de nuevo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Autor": {
+        "type": "object",
+        "properties": {
+          "pais_id": {
+              "type": "integer",
+              "format": "int32"
+          },
+          "nombre": {
+              "type": "string"
+          },
+          "fecha_nacimiento": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+          },
+          "biografia": {
+              "type": "string"
+          },
+          "estatus": {
+              "type": "integer",
+              "default": 1
+          }
+        },
+        "required": ["pais_id", "nombre", "fecha_nacimiento", "biografia"]
+      },
+      "AutorResponse": {
+        "type": "object",
+        "properties": {
+          "pais_id": {
+              "type": "integer",
+              "format": "int32",
+              "description": "numeros enteros desde el 1 hasta 196"
+          },
+          "nombre": {
+              "type": "string"
+          },
+          "fecha_nacimiento": {
+              "type": "string",
+              "format": "yyyy-MM-dd"
+          },
+          "biografia": {
+              "type": "string"
+          },
+          "estatus": {
+              "type": "integer",
+              "default": 1
+          },
+          "pais":{
+            "$ref": "#/components/schemas/Pais"
+          }
+        }
+      },
+      "Libro": {
+        "type": "object",
+        "required": ["titulo"],
+        "properties": {
+          "titulo": {
+              "type": "string",
+              "maxLength": 200
+          },
+          "estatus": {
+              "type": "integer",
+              "default": 1
+          }
+        }
+      },
+      "Pais": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+              "type": "string"
+          },
+          "estatus": {
+              "type": "integer",
+              "default": 1
+          }
+        }
+      },
+      "Persona": {
+        "type": "object",
+        "properties": {
+          "dni": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 50
+          },
+          "nombre": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 100
+          },
+          "direccion": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 200
+          },
+          "telefono": {
+              "type": "string",
+              "minLength": 10,
+              "maxLength": 12
+          },
+          "fecha_nacimiento": {
+            "type": "string",
+            "format": "yyyy-MM-dd",
+            "minLength": 10
+          },
+          "estatus": {
+              "type": "integer",
+              "default": 1
+          }
+        }
+      },
+      "TipoUsuario": {
+        "type": "object",
+        "required": ["id", "nombre", "estatus"],
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "nombre": {
+              "type": "string"
+          },
+          "estatus": {
+              "type": "integer",
+              "default": 1
+          }
+        }
+      },
+      "Usuario": {
+        "type": "object",
+        "required": ["persona_id", "login", "password"],
+        "properties": {
+          "tipo_usuario_id": {
+              "type": "integer",
+              "enum": [1,2]
+          },
+          "persona_id": {
+            "type": "integer"
+          },
+          "login": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 50,
+            "example": "josueperezf@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 10
+          },
+          "estatus": {
+              "type": "integer",
+              "default": 1
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "description": "copia y pega en value el token retornado luego de ejecutar el login",
+        "name": "x-token"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ]
+}

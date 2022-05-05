@@ -2,6 +2,9 @@ const express = require('express');
 const { connection } = require('./database/db')
 var cors = require('cors');
 const rutas = require('./routes/index.routes');
+// swagger
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('../swagger.json');
 class Server {
 
     constructor() {
@@ -27,6 +30,7 @@ class Server {
     middlewares() {
         // Hacer publico nuestra carpeta publica
         // this.app.use(express.static('public'));
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
         this.app.use(express.json() );
         // con app.use agrego middleware
         this.app.use(cors());
