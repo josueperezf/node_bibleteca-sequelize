@@ -1,6 +1,7 @@
-## nodeCursoTypescriptMysqlSequelize
+## nodeBibliotecaSequelize
 
-Este proyecto es realizado con typescript, no tiene validaciones pero las puedo obtener de los otros proyectos de node, 
+Este proyecto es realizado con javascript, 
+
 se utilizo *Sequelize* que es equivalente a mongose para mongodb, Sequelize permite utilizar bases de datos relaciones
 
 NOTA: cuando nos conecctamos a la base de datos, si esta en force podra realizar cambio de crear y/o modificar estructura de base de datos, se recomienda solo en desarrollo, o un manejo controlado
@@ -11,6 +12,18 @@ NOTA: cuando nos conecctamos a la base de datos, si esta en force podra realizar
         console.log('sin conexion a base de datos');
     });
 
+## los endpoint esta documentados en 
+
+Ejemplo de consumo del backend esta en: <http://localhost:8080/api-docs/> y se realizo con SWAGGER
+- [nodeBibliotecaSequelize](#nodebibliotecasequelize)
+- [los endpoint esta documentados en](#los-endpoint-esta-documentados-en)
+- [crear el proyecto sequelize](#crear-el-proyecto-sequelize)
+- [crear MODEL el sequelize](#crear-model-el-sequelize)
+- [SEEDER](#seeder)
+- [NOTAS IMPORTANTES](#notas-importantes)
+- [Comándos útiles](#comándos-útiles)
+- [VER LOGS HEROKU (Informacion por si lo quiero subir a heroku)](#ver-logs-heroku-informacion-por-si-lo-quiero-subir-a-heroku)
+- [Notas HEROKU  (Informacion por si lo quiero subir a heroku)](#notas-heroku--informacion-por-si-lo-quiero-subir-a-heroku)
 
 ## crear el proyecto sequelize
 
@@ -116,13 +129,13 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 
 
 
-## VER LOGS HEROKU
+## VER LOGS HEROKU (Informacion por si lo quiero subir a heroku)
 
 1. Para ver los ultimos 100 logs: ``` heroku logs -n 100 ```
 
 2. Para ver los ultimos 100 logs y se mantenga esuchando para que enseñe los nuevos logs que vayan generandose ``` heroku logs -n 100 --tail ```
 
-## Notas HEROKU 
+## Notas HEROKU  (Informacion por si lo quiero subir a heroku)
 
 2. *heroku*, si realizaste un cambio y no se ve reflejado en produccion heroku, se recomienda
 
