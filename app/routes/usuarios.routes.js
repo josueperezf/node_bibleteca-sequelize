@@ -45,6 +45,7 @@ router.put('/:id', [
     check('persona_id').custom(uniquePersonaPorUsuarioId),
     check('login', 'El dni nombre es obligatorio').trim().notEmpty(),
     check('login', 'El dni no tiene la longitud permitida').isLength({min:10, max:50}),
+    check('login').custom(uniqueLogin),
     validarCampos
 ], updateUsuario );
 
