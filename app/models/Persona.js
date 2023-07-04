@@ -55,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(12)
     },
     fecha_nacimiento: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       validate: {
         isDate: {
           args: true,
@@ -66,7 +66,17 @@ module.exports = (sequelize, DataTypes) => {
     estatus: {
       type: DataTypes.INTEGER,
       defaultValue: 1
-    }
+    },
+    created_at: {
+      type: 'TIMESTAMP',
+      defaultValue: sequelize.fn('NOW'),
+      allowNull: false
+    },
+    updated_at: {
+        type: 'TIMESTAMP',
+        defaultValue: sequelize.fn('NOW'),
+        allowNull: false
+    },
   }, {
     scopes: {
       buscar(value) {
@@ -87,6 +97,9 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Persona',
     tableName: 'personas',
     timestamps: false,
+    underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
 
   return Persona;

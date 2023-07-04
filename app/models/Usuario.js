@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         {
             where: {
                 [Op.or]: [
-                    {'$usuario.login$': {[Op.like]: `%${value}%`}},
+                    {login: {[Op.like]: `%${value}%`}},
                     {'$persona.dni$': {[Op.like]: `%${value}%`}},
                     {'$persona.nombre$': {[Op.like]: `%${value}%`}},
                 ],
@@ -72,13 +72,25 @@ module.exports = (sequelize, DataTypes) => {
     estatus: {
       type: DataTypes.INTEGER,
       defaultValue: 1
-    }
+    },
+    created_at: {
+      type: 'TIMESTAMP',
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false
+    },
+    updated_at: {
+        type: 'TIMESTAMP',
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Usuario',
     tableName: 'usuarios',
     timestamps: false,
-    underscored: true
+    underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   // con la siguiente linea oculto el password, para no enviar ni siquiera la propiedad password por seguridad
   Usuario.prototype.toJSON =  function () {

@@ -30,7 +30,7 @@ class Server {
     middlewares() {
         // Hacer publico nuestra carpeta publica
         // this.app.use(express.static('public'));
-        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); //http://localhost:8080/api-docs/
         this.app.use(express.json() );
         // con app.use agrego middleware
         this.app.use(cors());

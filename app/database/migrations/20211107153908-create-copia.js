@@ -36,6 +36,16 @@ module.exports = {
       },
       serial: {
         type: Sequelize.STRING(50)
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        default: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        default: Sequelize.literal('CURRENT_TIMESTAMP'),
       }
     });
   },

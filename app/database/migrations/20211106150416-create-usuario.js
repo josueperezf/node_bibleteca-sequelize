@@ -44,13 +44,15 @@ module.exports = {
         type: Sequelize.INTEGER,
         default: 1
       },
-      createdAt: {
+      created_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        default: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
-      updatedAt: {
+      updated_at: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        default: Sequelize.literal('CURRENT_TIMESTAMP'),
       }
     });
   },

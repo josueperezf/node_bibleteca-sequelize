@@ -2,10 +2,11 @@ module.exports =
 {
   development: {
     username: 'root',
-    password: '',
-    database: 'biblioteca_sequelize',
-    host:     'localhost',
+    password: '1234',
+    database: 'node_biblioteca',
+    host:     '127.0.0.1',
     dialect:  'mysql',
+    port: 3307,
     define: {
       // timestamps: false
       // Genera claves foreaneas, del tipo, user_id, en vez de userId

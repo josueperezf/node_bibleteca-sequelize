@@ -60,12 +60,24 @@ module.exports = (sequelize, DataTypes) => {
     serial: {
       type: DataTypes.STRING(50)
     },
+    created_at: {
+      type: 'TIMESTAMP',
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false
+    },
+    updated_at: {
+        type: 'TIMESTAMP',
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Copia',
     tableName: 'copias',
     timestamps: false,
-    underscored: true
+    underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   Copia.addScope('activo', {where: {estado_id:1}});
   return Copia;

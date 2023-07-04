@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(100),
     },
     fecha_nacimiento: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY, // DATEONLY es fecha, date es timestamp, 
       validate: {
         isDate: {
           args: true,
@@ -53,17 +53,29 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    biografia: DataTypes.TEXT,
+    biografia: {
+     type: DataTypes.TEXT
+    },
     estatus: {
       type: DataTypes.INTEGER,
       defaultValue: 1
-    }
+    },
+    created_at: {
+      type: 'TIMESTAMP',
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false
+    },
+    updated_at: {
+        type: 'TIMESTAMP',
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+    },
   }, {
     sequelize,
     modelName: 'Autor',
-    freezeTableName: true,
     tableName: 'autores',
-    timestamps: false
+    createdAt: 'created_at',
+    updatedAt: 'updated_at',
   });
   return Autor;
 };

@@ -25,7 +25,17 @@ module.exports = (sequelize, DataTypes) => {
     estatus: {
       type: DataTypes.INTEGER,
       defaultValue: 1
-  }
+    },
+    created_at: {
+      type: 'TIMESTAMP',
+      defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+      allowNull: false
+    },
+    updated_at: {
+        type: 'TIMESTAMP',
+        defaultValue: sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false
+    },
   }, {
     scopes: {
         buscar(value) {
@@ -41,7 +51,10 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Libro',
     freezeTableName: true,
     tableName: 'libros',
-    timestamps: false
+    timestamps: false,
+    underscored: true,
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
   Libro.addScope('activo', {where: {estatus:1}});
   return Libro;

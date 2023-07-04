@@ -24,12 +24,22 @@ module.exports = {
         type: Sequelize.STRING(12)
       },
       fecha_nacimiento: {
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
         allowNull: false,
       },
       estatus: {
         type: Sequelize.INTEGER,
         default: 1
+      },
+      created_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        default: Sequelize.literal('CURRENT_TIMESTAMP'),
+      },
+      updated_at: {
+        allowNull: false,
+        type: Sequelize.DATE,
+        default: Sequelize.literal('CURRENT_TIMESTAMP'),
       }
     });
   },
