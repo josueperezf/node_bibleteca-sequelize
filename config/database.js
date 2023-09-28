@@ -4,9 +4,9 @@ module.exports =
     username: 'root',
     password: '1234',
     database: 'node_biblioteca',
-    host:     '127.0.0.1',
+    host:     'db', // el nombre de mi servicio en mi archivo docker-compose
     dialect:  'mysql',
-    port: 3307,
+    port: 3306,
     define: {
       // timestamps: false
       // Genera claves foreaneas, del tipo, user_id, en vez de userId

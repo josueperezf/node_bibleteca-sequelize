@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  web:
+    # NOMBRE QUE LE DAMOS AL CONTENEDOR
+    container_name: bibliotecaApp
+    restart: always
+    # la siguiente linea es para que construya la imagen a partir del archivo Dockerfile que consiga en el directorio actual
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    volumes:
+      - ".:/usr/src/app"
+    networks:
+      - red-node-libreria
+  db:
+    container_name: db-mysql
+    image: mysql:latest
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: node_biblioteca
+    networks:
+      - red-node-libreria
+
+#lo siguiente es para crear la red, le damos un nombre, para este proyecto se llama red-node-libreria
+networks:
+  red-node-libreria:
