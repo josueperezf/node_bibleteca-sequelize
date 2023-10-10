@@ -5,6 +5,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
+console.log({env});
 // la isguiente linea es la original,
 // const config = require(__dirname + '/../config/config.json')[env];
 // esta es la del video de youtube

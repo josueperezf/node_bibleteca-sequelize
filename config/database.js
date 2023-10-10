@@ -31,6 +31,7 @@ module.exports =
     database: process.env.DB_DATABASE || 'biblioteca_sequelize',
     host:     process.env.DB_HOST     || 'localhost',
     dialect:  process.env.DB_DIALECT  || 'mysql',
+    port:     process.env.DB_PORT || 3306,
     define: {
       // timestamps: false
       // Genera claves foreaneas, del tipo, user_id, en vez de userId

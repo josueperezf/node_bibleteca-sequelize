@@ -123,27 +123,29 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 
 2. npx sequelize-cli model:generate: --name nombre_modelo --atributes campo:tipo_de_dato,otro_campo:tipo_de_dato creará el modelo y la respectiva migración.
 
-3. npx sequelize-cli db:migrate: correrá las migraciones pendientes.
+3. ```npx sequelize-cli db:migrate```  correrá las migraciones pendientes en ambiente desarrollo.
+   
+4. ```npx sequelize-cli db:migrate --env production```  correrá las migraciones pendientes en ambiente produccion.
 
-4. npx sequelize-cli db:migrate:status: mostrará las migraciones ejecutadas.
+5. npx sequelize-cli db:migrate:status: mostrará las migraciones ejecutadas.
 
-5. npx sequelize-cli db:migrate:undo: revertirá la última migración ejecutadas.
+6. npx sequelize-cli db:migrate:undo: revertirá la última migración ejecutadas.
 
-6. npx sequelize-cli db:migrate:undo:all: revertirá todas las migraciones ejecutadas.
+7. npx sequelize-cli db:migrate:undo:all: revertirá todas las migraciones ejecutadas.
 
-7. npx sequelize-cli seed:generate: creará el seeder de datos fake.
+8. npx sequelize-cli seed:generate: creará el seeder de datos fake.
 
-8. npx sequelize-cli db:seed archivo-x.js correrá un seeder especifico
+9.  npx sequelize-cli db:seed archivo-x.js correrá un seeder especifico
 
-9. npx sequelize-cli db:seed:all: correrá todos seeders.
+10. npx sequelize-cli db:seed:all: correrá todos seeders.
 
-10. npx sequelize-cli db:seed:undo: revertirá el último seeder que se ejecutó.
-
-11. npx sequelize-cli db:seed:undo:all: revertirá todos los seeders ejecutados.
+11. npx sequelize-cli db:seed:undo: revertirá el último seeder que se ejecutó.
 
 12. npx sequelize-cli db:seed:undo:all: revertirá todos los seeders ejecutados.
 
-13. npx sequelize-cli migration:generate: generará un archivo custom de migración (Ej: ALTER TABLE).
+13. npx sequelize-cli db:seed:undo:all: revertirá todos los seeders ejecutados.
+
+14. npx sequelize-cli migration:generate: generará un archivo custom de migración (Ej: ALTER TABLE).
 
 
 
