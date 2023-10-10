@@ -37,6 +37,13 @@ module.exports =
       // timestamps: false
       // Genera claves foreaneas, del tipo, user_id, en vez de userId
       undescored: true,
-    }
+    },
+    pool: {
+      max: 15,
+      min: 5,
+      idle: 20000,
+      evict: 15000,
+      acquire: 30000
+    },
   }
 }
