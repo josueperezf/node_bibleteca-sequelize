@@ -137,7 +137,7 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 
 9.  npx sequelize-cli db:seed archivo-x.js correrá un seeder especifico
 
-10. npx sequelize-cli db:seed:all: correrá todos seeders.
+10. npx sequelize-cli db:seed:all correrá todos seeders en el ambiente donde estemos, esto nos lo indica la variable de entorno NODE_ENV
 
 11. npx sequelize-cli db:seed:undo: revertirá el último seeder que se ejecutó.
 

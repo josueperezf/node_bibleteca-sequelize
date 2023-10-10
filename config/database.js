@@ -1,10 +1,11 @@
+require('dotenv').config();
 module.exports = 
 {
   development: {
     username: 'root',
-    password: '1234',
+    password: '',
     database: 'node_biblioteca',
-    host:     'db', // el nombre de mi servicio en mi archivo docker-compose
+    host:     'localhost', // el nombre de mi servicio en mi archivo docker-compose
     dialect:  'mysql',
     port: 3306,
     define: {
@@ -26,12 +27,12 @@ module.exports =
     }
   },
   production: {
-    username: process.env.DB_USERNAME || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_DATABASE || 'biblioteca_sequelize',
-    host:     process.env.DB_HOST     || 'localhost',
-    dialect:  process.env.DB_DIALECT  || 'mysql',
-    port:     process.env.DB_PORT || 3306,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
+    host:     process.env.DB_HOST    ,
+    dialect:  process.env.DB_DIALECT ,
+    port:     process.env.DB_PORT,
     define: {
       // timestamps: false
       // Genera claves foreaneas, del tipo, user_id, en vez de userId
