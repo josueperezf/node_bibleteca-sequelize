@@ -210,7 +210,9 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
    * todo esto para crear las variables de entorno que seran necesarias para conectarnos con ```docker hub```
 
 
-4. debemos ir a aws y crear nuestra instancia ```EC2``` si no la tenemos la creamos, para este ejemplo utilizamos ```ubuntu```
+4. debemos ir a aws y crear nuestra instancia ```EC2``` si no la tenemos la creamos, para este ejemplo utilizamos ```ubuntu```. en ella debemos de ejecutar los siguientes comandos
+   1. instalamos docker en la instancia ec2
+   2. ```sudo chmod 777 /var/run/docker.sock``` para dar permiso a docker a ejecutarse
 
 5. Ahora debemos ir nuevamente al navegador web para consultar a la pagina de github y alli nuestro repositorio. estando en el debemos ir a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners```  y hacer:
    1. hacemos click en ```New self-hosted runner```
