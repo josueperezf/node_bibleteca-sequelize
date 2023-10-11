@@ -1,5 +1,10 @@
 ## nodeBibliotecaSequelize
 
+
+```npx sequelize-cli db:migrate```  correrá las migraciones pendientes en ambiente desarrollo.
+```npx sequelize-cli db:migrate --env production```  correrá las migraciones pendientes en ambiente produccion.
+```npx sequelize-cli db:seed:all ``` correra todos los seed
+
 Este proyecto es realizado con javascript, 
 
 se utilizo *Sequelize* que es equivalente a mongose para mongodb, Sequelize permite utilizar bases de datos relaciones
@@ -41,6 +46,7 @@ Ejemplo de consumo del backend esta en: <http://localhost:8080/api-docs/> y se r
   - [Comándos útiles](#comándos-útiles)
   - [VER LOGS HEROKU (Informacion por si lo quiero subir a heroku)](#ver-logs-heroku-informacion-por-si-lo-quiero-subir-a-heroku)
   - [Notas HEROKU  (Informacion por si lo quiero subir a heroku)](#notas-heroku--informacion-por-si-lo-quiero-subir-a-heroku)
+- [Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando GitHub Actions](#pasos-para-hacer-un-deploy-de-una-aplicacion-nodejs-en-aws-ec2-usando-github-actions)
 
 # documentacion para conocer lo utilizado en este proyecto
 
@@ -166,3 +172,108 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
     - git push heroku master
 
 3. *heroku* cuando hacemos un deploy nuevo, 'subimos nuestro codigo a heroku' va a borrar todo lo que no sea parte del repositorio, mejor dicho a lo que git no le haga seguimiento, si esto lo hacemos en un servidor no heroku, no tendriamos problemas, ya que las imagenes no se borrarian, para este ejemplo usaremos 
+
+
+
+# Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando GitHub Actions
+
+1. para ello debemos crear primero, el la raiz del proyecto debemos crear un archivo sin extension, y lo debemos llamar ```Dockerfile``` con un contenido acorde a nuestro proyecto para este ejemplo este es el contenido
+   ```
+        FROM node:18
+        RUN mkdir -p /usr/src/app
+        WORKDIR /usr/src/app
+        COPY package*.json ./
+        RUN npm install
+        COPY . .
+        EXPOSE 3000
+        CMD [ "npm", "run", "dev" ]
+   ```
+
+2. ahora en la raiz del proyecto debemos crear un archivo llamado ```.dockerignore```, en el que indicaremos que archivos no se introduciran en la imagen, por ejemplo: 
+   ```
+        .vscode
+        .git
+        .gitignore
+        node_modules
+        npm-debug.log
+   ```
+
+3. Ahora debemos ir a github desde un navegador web, y:
+   * visitar nuestro repositorio, estando alli hacemos click ```Settings```,
+   * despues hacemos click en ```Secrets and variables```, despues presionamos en ```Actions```,
+   * estando en la pestaña de ```Secrets```, debemos colocar nuestras credenciales para docker hub, para ello hacemos click en ```New Repositiry Secret```, y en:
+     * ```Name``` escribimos ```DOCKER_USERNAME```
+     * y en ```Secret``` ```josueperezf@gmail.com```
+   * hacemos click nuevamente en ```New Repositiry Secret```, en:
+     * ```Name``` escribimos ```DOCKER_PASSWORD```
+     * y en ```Secret``` ```12490067o```
+   * todo esto para crear las variables de entorno que seran necesarias para conectarnos con ```docker hub```
+
+
+4. debemos ir a aws y crear nuestra instancia ```EC2``` si no la tenemos la creamos, para este ejemplo utilizamos ```ubuntu```
+
+5. Ahora debemos ir nuevamente al navegador web para consultar a la pagina de github y alli nuestro repositorio. estando en el debemos ir a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners```  y hacer:
+   1. hacemos click en ```New self-hosted runner```
+   2. en ```Runner image``` seleccionamos ```Linux```, esto nos mostrará unos comandos que debemos ejecutarlos en nuestra terminal de la instancia ec2.
+      * cuando nos diga aparezca ```Enter the name of the runner group to add this runner to:``` presionamos enter sin escribir nada
+      * cuando nos salga ```Enter the name of runner: [press Enter for ip-xxx ] ``` alli colocamos ```aws-ec2``` y damos enter, recordemos que este nombre tambien lo colocamos en el archivo llamado ```cicd-workflow.yml```, asi que si lo cambiamos en uno, lo cambiamos en todos lados para que funcione
+      * Cuando nos diga ```Enter any additional labels (ex. label-1, label-2) ...``` escribimos nuevamente ```aws-ec2``` 
+      * Cuando nos salga el texto ```Enter name of work folder: [press Enter for _work]``` no escribimos nada, solo damos ```Enter``` en el teclado
+   3. ahora para comprobar que todo esta bien, desde el navegador web visitamos nuestro repositorio, vamos a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners``. si alli sale algo que diga ```aws-ec2``` y que este en estatus de color verde o activo o Idle o algo asi, entonces vamos por buen camino.
+
+
+
+
+
+
+
+
+6. en la raiz del proyecto, en visual studio code, creamos una carpeta llamara ```.github```, y dentro de ella se crea otra carpeta con el nombre de: ```workflows```. en esta ultima creamos un archivo con el nombre ```cicd-workflow.yml```
+   
+7. en el archivo ```cicd-workflow.yml``` colocamos algo como:
+   ```
+   name: CICD
+   
+   on:
+     push:
+       branches: [cicd-docker-ec2]
+   
+   jobs:
+     build:
+       runs-on: [ubuntu-latest]
+       steps:
+         - name: Checkout source
+           uses: actions/checkout@v3
+         - name: Login to docker hub
+           run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
+         - name: Build docker image
+           run: docker build -t josueperezf/node_biblioteca-sequelize .
+         - name: Publish image to docker hub
+           run: docker push josueperezf/node_biblioteca-sequelize:latest
+           
+     deploy:
+       needs: build
+       runs-on: [aws-ec2]
+       steps:
+         - name: Pull image from docker hub
+           run: docker pull josueperezf/node_biblioteca-sequelize:latest
+         - name: Delete old container
+           run: docker rm -f node_biblioteca-sequelize-container
+         - name: Run docker container
+           run: docker run -d -p 3000:3000 --name node_biblioteca-sequelize-container josueperezf/node_biblioteca-sequelize
+   ```
+
+8. explicacion, del archivo anterior ```cicd-workflow.yml```, 
+   1. ```branches``` es la rama de la que se hara despliegue 
+   2. ```jobs``` son los trabajos que hara este archivo
+   3. ```workflows```  es un flujo de trabajo, Un flujo de trabajo es un proceso automatizado configurable que ejecutará uno o más jobs. Los flujos de trabajo se definen mediante un archivo de YAML que se verifica en tu repositorio y se ejecutará cuando lo active un evento dentro de este o puede activarse manualmente o en una programación definida. Los flujos de trabajo se definen en el directorio .github/workflows
+   4. ```steps``` son los pasos que se ejecutaran
+   5. ```uses``` ```actions/checkout@v3``` hace referencia al repositorio ```https://github.com/actions/checkout```. no se en verdad si sea solo para nodejs o algo asi
+   6. ```name``` es el nombre descriptivo de la tarea que queremos que se ejecute en la terminal de ubuntu
+   7. ```run``` es el comando que se debe ejecutar en la terminal, ejemplo, podriamos colocar ```npm install```
+   8. IMPORTANTE: si queremos correr el archivo ```cicd-workflow.yml```, hay varias formas, una es estando en la pagina de github, entramos al repositorio del proyecto, vamos a donde dice ```Actions``` y alli saldra jobs o build, esto ejecutara los comandos y nos mostrara paso a paso lo que esta haciendo
+
+
+
+
+18
