@@ -176,6 +176,7 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 
 
 # Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando GitHub Actions
+importante destacar que el proyecto ya debe poder conectarse a la base de datos de produccion, ya que si al tratar de hacer el deploy hay un error, entonces no lo realizar en el servidor
 
 1. para ello debemos crear primero, el la raiz del proyecto debemos crear un archivo sin extension, y lo debemos llamar ```Dockerfile``` con un contenido acorde a nuestro proyecto para este ejemplo este es el contenido
    ```
@@ -211,8 +212,13 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 
 
 4. debemos ir a aws y crear nuestra instancia ```EC2``` si no la tenemos la creamos, para este ejemplo utilizamos ```ubuntu```. en ella debemos de ejecutar los siguientes comandos
-   1. instalamos docker en la instancia ec2
-   2. ```sudo chmod 777 /var/run/docker.sock``` para dar permiso a docker a ejecutarse
+   1. ejecutamos ```sudo apt-get update && sudo apt-get upgrade -y```
+   2. ejecutamos ```sudo snap install docker```
+   3. ```sudo chmod 777 /var/run/docker.sock``` para dar permiso a docker a ejecutarse
+   4. tambien debemos ir a las ```reglas de entrada``` de la instancia ec2  editarlas, para creando una que sea:
+      1. ```Type``` ```TCP Personalizado```, 
+      2. ```Intervalo de puertos``` ```3000```
+      3. ```Origen``` ```Anywhere-IPv4``` y en el siguiente valor ```0.0.0.0/0```
 
 5. Ahora debemos ir nuevamente al navegador web para consultar a la pagina de github y alli nuestro repositorio. estando en el debemos ir a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners```  y hacer:
    1. hacemos click en ```New self-hosted runner```
