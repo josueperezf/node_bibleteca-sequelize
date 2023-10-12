@@ -185,6 +185,8 @@ cada vez que subamos cambios a la rama ```cicd-docker-ec2```, se deben ejecutar 
 
 <span style='color:red'>Nota: </span> si mas adelante, cuando vayamos a ver esta documentacion no encontremos nada de esto, es porque lo borre, ya que las instancias ec2 son pagas, al igual que la base de datos.
 
+para hacer esto no utilizamos crear un archivo ```docker-compose.yml```, lo tengo en el directorio porque me sirve de guia para otras practicas, ademas funciona. pero para esto no lo utilice
+
 
 
 1. para ello debemos crear primero, el la raiz del proyecto debemos crear un archivo sin extension, y lo debemos llamar ```Dockerfile``` con un contenido acorde a nuestro proyecto para este ejemplo este es el contenido
@@ -237,7 +239,7 @@ cada vez que subamos cambios a la rama ```cicd-docker-ec2```, se deben ejecutar 
       * cuando nos salga ```Enter the name of runner: [press Enter for ip-xxx ] ``` alli colocamos ```aws-ec2``` y damos enter, recordemos que este nombre tambien lo colocamos en el archivo llamado ```cicd-workflow.yml```, asi que si lo cambiamos en uno, lo cambiamos en todos lados para que funcione
       * Cuando nos diga ```Enter any additional labels (ex. label-1, label-2) ...``` escribimos nuevamente ```aws-ec2``` 
       * Cuando nos salga el texto ```Enter name of work folder: [press Enter for _work]``` no escribimos nada, solo damos ```Enter``` en el teclado
-   3. *Importante:* ahora debemos de seguir ejecutando en la terminal de ec2 los comandos que nos muestra github actions, creo que uno de ellos es ``` ./run.sh```. se debe ejecutar desde la carpeta que se creo cuando comenzamos estos comandos, creo que se llama ```actions-``` o algo parecido
+   3. *Importante:* ahora debemos de seguir ejecutando en la terminal de ec2 los comandos que nos muestra github actions, creo que uno de ellos es ``` ./run.sh &```. se debe ejecutar desde la carpeta que se creo cuando comenzamos estos comandos, creo que se llama ```actions-``` o algo parecido
    4. ahora para comprobar que todo esta bien, desde el navegador web visitamos nuestro repositorio, vamos a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners```. si alli sale algo que diga ```aws-ec2``` y que este en estatus de color verde o activo o Idle o algo asi, entonces vamos por buen camino, si no esta, podemos probar yendo a la instancia ec2 de amazon y tratar de ejecutar o verificar si ejecutamos TODOS los comandos que nos dio ```GITHUB ACTIONS```
 
 
