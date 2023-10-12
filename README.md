@@ -177,9 +177,13 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 
 # Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando docker, docker hub y GitHub Actions
 
-importante destacar que el proyecto ya debe poder conectarse a la base de datos de produccion, ya que si al tratar de hacer el deploy hay un error, entonces no lo realizar en el servidor. ademas es de destacar que se hará el deploy de manera Automatica cada vez que actualicemos la rama ```cicd-docker-ec2```, asi la llamamos para este proyecto <https://github.com/josueperezf/node_biblioteca-sequelize>
+importante destacar que el proyecto ya debe poder conectarse a la base de datos de produccion, 'si creamos una base de datos en ec2 recordemos que se demora un poco hasta que ec2 nos la permite utilizar, para este ejemplo la instancia ```RDS``` la llamamos ```biblioteca``` al igual que la base de datos ' ya que si al tratar de hacer el deploy hay un error, entonces no lo realizar en el servidor. ademas es de destacar que se hará el deploy de manera Automatica cada vez que actualicemos la rama ```cicd-docker-ec2```, asi la llamamos para este proyecto <https://github.com/josueperezf/node_biblioteca-sequelize>. si decidimos colocarle otro nombre a la rama, como master, develop o lo que sea, entonces debempos modificar el archivo ```cicd-docker-ec2```, este lo crearemos mas adelante
 
 <span style='color:red'>Importante: </span> si luego de estar corriendo nuestro proyecto en la instancia ec2 deja de funcionar, debemos entrar a la instancia ec2 desde una terminal y ejecutar ```cd actions-runner```, y luego ejecutar tambien ```./run.sh```.esto hace que el servidor se conecte con nuestro github, pero si cerramos la terminal se cae. para que quede por siempre corriendo el comando, debemos ejecutar en la terminal lo siguiente: ```./run.sh &``` con el ```&```, no lo debemos quitar, es para que ejecute el comando en segundo plano y que asi cerremos la terminal se siga ejecutando. si no sabemos si se esta ejecutando o no, entonces podemos desde el navegador web, visitar el repositorio del proyecto, ir a la pestaña de ```Runners```, alli vamos a donde dice ```Actions``` y luego hacemos click en ```Runners```, alli tenemos algo o veremos si esta en linea o no
+
+cada vez que subamos cambios a la rama ```cicd-docker-ec2```, se deben ejecutar dos etapas la ```build``` que es en la que crea la imagen docker y la sube a nuestro docker hub, y luego la etapa de ```deploy```, esto lo podemos ver graficamente llego al repositorio en ```github``` y haciendo click en ```Actions```, nos mostrara paso a paso lo que hace cuando subismos cambios a esa rama
+
+<span style='color:red'>Nota: </span> si mas adelante, cuando vayamos a ver esta documentacion no encontremos nada de esto, es porque lo borre, ya que las instancias ec2 son pagas, al igual que la base de datos.
 
 
 
