@@ -177,7 +177,9 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 
 # Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando docker, docker hub y GitHub Actions
 
-importante destacar que el proyecto ya debe poder conectarse a la base de datos de produccion, ya que si al tratar de hacer el deploy hay un error, entonces no lo realizar en el servidor. ademas es de destacar que se hará el deploy de manera Automatica cada vez que actualicemos la rama ```cicd-docker-ec2```, asi la llamamos para este proyecto ```https://github.com/josueperezf/node_biblioteca-sequelize```
+importante destacar que el proyecto ya debe poder conectarse a la base de datos de produccion, ya que si al tratar de hacer el deploy hay un error, entonces no lo realizar en el servidor. ademas es de destacar que se hará el deploy de manera Automatica cada vez que actualicemos la rama ```cicd-docker-ec2```, asi la llamamos para este proyecto <https://github.com/josueperezf/node_biblioteca-sequelize>
+
+<span style='color:red'>Importante: </span> si luego de estar corriendo nuestro proyecto en la instancia ec2 deja de funcionar, debemos entrar a la instancia ec2 desde una terminal y ejecutar ```cd actions-runner```, y luego ejecutar tambien ```./run.sh```.esto hace que el servidor se conecte con nuestro github, pero si cerramos la terminal se cae. para que quede por siempre corriendo el comando, debemos ejecutar en la terminal lo siguiente: ```./run.sh &``` con el ```&```, no lo debemos quitar, es para que ejecute el comando en segundo plano y que asi cerremos la terminal se siga ejecutando. si no sabemos si se esta ejecutando o no, entonces podemos desde el navegador web, visitar el repositorio del proyecto, ir a la pestaña de ```Runners```, alli vamos a donde dice ```Actions``` y luego hacemos click en ```Runners```, alli tenemos algo o veremos si esta en linea o no
 
 
 
@@ -232,7 +234,7 @@ importante destacar que el proyecto ya debe poder conectarse a la base de datos 
       * Cuando nos diga ```Enter any additional labels (ex. label-1, label-2) ...``` escribimos nuevamente ```aws-ec2``` 
       * Cuando nos salga el texto ```Enter name of work folder: [press Enter for _work]``` no escribimos nada, solo damos ```Enter``` en el teclado
    3. *Importante:* ahora debemos de seguir ejecutando en la terminal de ec2 los comandos que nos muestra github actions, creo que uno de ellos es ``` ./run.sh```. se debe ejecutar desde la carpeta que se creo cuando comenzamos estos comandos, creo que se llama ```actions-``` o algo parecido
-   4. ahora para comprobar que todo esta bien, desde el navegador web visitamos nuestro repositorio, vamos a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners``. si alli sale algo que diga ```aws-ec2``` y que este en estatus de color verde o activo o Idle o algo asi, entonces vamos por buen camino, si no esta, podemos probar yendo a la instancia ec2 de amazon y tratar de ejecutar o verificar si ejecutamos TODOS los comandos que nos dio ```GITHUB ACTIONS```
+   4. ahora para comprobar que todo esta bien, desde el navegador web visitamos nuestro repositorio, vamos a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners```. si alli sale algo que diga ```aws-ec2``` y que este en estatus de color verde o activo o Idle o algo asi, entonces vamos por buen camino, si no esta, podemos probar yendo a la instancia ec2 de amazon y tratar de ejecutar o verificar si ejecutamos TODOS los comandos que nos dio ```GITHUB ACTIONS```
 
 
 
@@ -246,7 +248,7 @@ importante destacar que el proyecto ya debe poder conectarse a la base de datos 
 7. en el archivo ```cicd-workflow.yml``` colocamos algo como:
    ```
    name: CICD
-   
+
    on:
      push:
        branches: [cicd-docker-ec2]
@@ -255,24 +257,25 @@ importante destacar que el proyecto ya debe poder conectarse a la base de datos 
      build:
        runs-on: [ubuntu-latest]
        steps:
-         - name: Checkout source
+         - name: Verificar Fuente
            uses: actions/checkout@v3
-         - name: Login to docker hub
+         - name: Loguerse a docker hub
            run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
-         - name: Build docker image
+         - name: Construir imagen docker
            run: docker build -t josueperezf/node_biblioteca-sequelize .
-         - name: Publish image to docker hub
+         - name: Publicar nuestra imagen en docker hub
            run: docker push josueperezf/node_biblioteca-sequelize:latest
            
      deploy:
        needs: build
+       # aws-ec2 es el nombre que le vamos a dar al setting actions runner de github
        runs-on: [aws-ec2]
        steps:
-         - name: Pull image from docker hub
+         - name: Bajar nuestra imagen de Docker Hub
            run: docker pull josueperezf/node_biblioteca-sequelize:latest
-         - name: Delete old container
+         - name: Eliminar contenedor antiguo si lo hay
            run: docker rm -f node_biblioteca-sequelize-container
-         - name: Run docker container
+         - name: Crear el contenedor docker con la nueva imagen
            run: docker run -d -p 3000:3000 --name node_biblioteca-sequelize-container josueperezf/node_biblioteca-sequelize
    ```
 

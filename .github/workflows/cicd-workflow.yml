@@ -22,9 +22,9 @@ jobs:
     # aws-ec2 es el nombre que le vamos a dar al setting actions runner de github
     runs-on: [aws-ec2]
     steps:
-      - name: Pull image from docker hub
+      - name: Bajar nuestra imagen de Docker Hub
         run: docker pull josueperezf/node_biblioteca-sequelize:latest
-      - name: Delete old container
+      - name: Eliminar contenedor antiguo si lo hay
         run: docker rm -f node_biblioteca-sequelize-container
-      - name: Run docker container
+      - name: Crear el contenedor docker con la nueva imagen
         run: docker run -d -p 3000:3000 --name node_biblioteca-sequelize-container josueperezf/node_biblioteca-sequelize
