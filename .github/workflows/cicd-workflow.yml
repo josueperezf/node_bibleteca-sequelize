@@ -8,13 +8,13 @@ jobs:
   build:
     runs-on: [ubuntu-latest]
     steps:
-      - name: Checkout source
+      - name: Verificar Fuente
         uses: actions/checkout@v3
-      - name: Login to docker hub
+      - name: Loguerse a docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} 
-      - name: Build docker image
+      - name: Construir imagen docker
         run: docker build -t josueperezf/node_biblioteca-sequelize .
-      - name: Publish image to docker hub
+      - name: Publicar nuestra imagen en docker hub
         run: docker push josueperezf/node_biblioteca-sequelize:latest
         
   deploy:
