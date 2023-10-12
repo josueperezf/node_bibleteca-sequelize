@@ -46,7 +46,7 @@ Ejemplo de consumo del backend esta en: <http://localhost:8080/api-docs/> y se r
   - [Comándos útiles](#comándos-útiles)
   - [VER LOGS HEROKU (Informacion por si lo quiero subir a heroku)](#ver-logs-heroku-informacion-por-si-lo-quiero-subir-a-heroku)
   - [Notas HEROKU  (Informacion por si lo quiero subir a heroku)](#notas-heroku--informacion-por-si-lo-quiero-subir-a-heroku)
-- [Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando GitHub Actions](#pasos-para-hacer-un-deploy-de-una-aplicacion-nodejs-en-aws-ec2-usando-github-actions)
+- [Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando docker, docker hub y GitHub Actions](#pasos-para-hacer-un-deploy-de-una-aplicacion-nodejs-en-aws-ec2-usando-docker-docker-hub-y-github-actions)
 
 # documentacion para conocer lo utilizado en este proyecto
 
@@ -175,8 +175,11 @@ NOTA: Lose seeder se ejecutan tantas veces lo llamemos, no son como las migracio
 
 
 
-# Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando GitHub Actions
-importante destacar que el proyecto ya debe poder conectarse a la base de datos de produccion, ya que si al tratar de hacer el deploy hay un error, entonces no lo realizar en el servidor
+# Pasos para hacer un Deploy de una aplicacion Nodejs en AWS EC2 usando docker, docker hub y GitHub Actions
+
+importante destacar que el proyecto ya debe poder conectarse a la base de datos de produccion, ya que si al tratar de hacer el deploy hay un error, entonces no lo realizar en el servidor. ademas es de destacar que se hará el deploy de manera Automatica cada vez que actualicemos la rama ```cicd-docker-ec2```, asi la llamamos para este proyecto ```https://github.com/josueperezf/node_biblioteca-sequelize```
+
+
 
 1. para ello debemos crear primero, el la raiz del proyecto debemos crear un archivo sin extension, y lo debemos llamar ```Dockerfile``` con un contenido acorde a nuestro proyecto para este ejemplo este es el contenido
    ```
@@ -219,6 +222,7 @@ importante destacar que el proyecto ya debe poder conectarse a la base de datos 
       1. ```Type``` ```TCP Personalizado```, 
       2. ```Intervalo de puertos``` ```3000```
       3. ```Origen``` ```Anywhere-IPv4``` y en el siguiente valor ```0.0.0.0/0```
+      4. esto es porque este proyecto lo levantamos en el puerto 3000, creo que si colocaron en la imagen docker, en el run del archivo ```cicd-workflow.yml``` que sera por el run, entonces este paso no seria necesario
 
 5. Ahora debemos ir nuevamente al navegador web para consultar a la pagina de github y alli nuestro repositorio. estando en el debemos ir a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners```  y hacer:
    1. hacemos click en ```New self-hosted runner```
@@ -227,7 +231,8 @@ importante destacar que el proyecto ya debe poder conectarse a la base de datos 
       * cuando nos salga ```Enter the name of runner: [press Enter for ip-xxx ] ``` alli colocamos ```aws-ec2``` y damos enter, recordemos que este nombre tambien lo colocamos en el archivo llamado ```cicd-workflow.yml```, asi que si lo cambiamos en uno, lo cambiamos en todos lados para que funcione
       * Cuando nos diga ```Enter any additional labels (ex. label-1, label-2) ...``` escribimos nuevamente ```aws-ec2``` 
       * Cuando nos salga el texto ```Enter name of work folder: [press Enter for _work]``` no escribimos nada, solo damos ```Enter``` en el teclado
-   3. ahora para comprobar que todo esta bien, desde el navegador web visitamos nuestro repositorio, vamos a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners``. si alli sale algo que diga ```aws-ec2``` y que este en estatus de color verde o activo o Idle o algo asi, entonces vamos por buen camino.
+   3. *Importante:* ahora debemos de seguir ejecutando en la terminal de ec2 los comandos que nos muestra github actions, creo que uno de ellos es ``` ./run.sh```. se debe ejecutar desde la carpeta que se creo cuando comenzamos estos comandos, creo que se llama ```actions-``` o algo parecido
+   4. ahora para comprobar que todo esta bien, desde el navegador web visitamos nuestro repositorio, vamos a ```Settings```, luego hacemos click en ```Actions```, y despues en ```Runners``. si alli sale algo que diga ```aws-ec2``` y que este en estatus de color verde o activo o Idle o algo asi, entonces vamos por buen camino, si no esta, podemos probar yendo a la instancia ec2 de amazon y tratar de ejecutar o verificar si ejecutamos TODOS los comandos que nos dio ```GITHUB ACTIONS```
 
 
 
@@ -280,8 +285,3 @@ importante destacar que el proyecto ya debe poder conectarse a la base de datos 
    6. ```name``` es el nombre descriptivo de la tarea que queremos que se ejecute en la terminal de ubuntu
    7. ```run``` es el comando que se debe ejecutar en la terminal, ejemplo, podriamos colocar ```npm install```
    8. IMPORTANTE: si queremos correr el archivo ```cicd-workflow.yml```, hay varias formas, una es estando en la pagina de github, entramos al repositorio del proyecto, vamos a donde dice ```Actions``` y alli saldra jobs o build, esto ejecutara los comandos y nos mostrara paso a paso lo que esta haciendo
-
-
-
-
-18

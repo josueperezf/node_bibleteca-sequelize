@@ -14,6 +14,7 @@ const rutas = [
     {path: '/api/personas',     route: require('./personas.routes'),    middlewareGlobals: [validarJWT]},
     {path: '/api/prestamos',    route: require('./prestamos.routes'),   middlewareGlobals: [validarJWT]},
     {path: '/api/usuarios',     route: require('./usuarios.routes'),    middlewareGlobals: [validarJWT]},
+    {path: '/',                 route: require('./default.routes'),         middlewareGlobals: [    ]},
 ];
 
 
