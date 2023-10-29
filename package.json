@@ -20,7 +20,8 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.3.3-rc.0",
     "sequelize": "^6.9.0",
-    "swagger-ui-express": "^4.3.0"
+    "swagger-ui-express": "^4.3.0",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.14",

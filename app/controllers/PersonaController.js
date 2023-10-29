@@ -33,6 +33,7 @@ const index = async (req = request, res=response) => {
 }
 
 const store = async (req = request, res=response) => {
+    const logger = buildLogger('PersonaController.js - store');
     const { dni, nombre, direccion, fecha_nacimiento, telefono = ''}  = req.body;
     try {
         
@@ -45,7 +46,7 @@ const store = async (req = request, res=response) => {
             msg: `Operación exitosa`
         });
     } catch (error) {
-        console.log(error);
+        logger.error(error);
         res.status(500).json({
             ok: false,
             msg:'Hable con el administrador',
@@ -54,16 +55,25 @@ const store = async (req = request, res=response) => {
 }
 
 const show = async (req = request, res=response) => {
+    const logger = buildLogger('PersonaController.js - show');
     const {id} =  req.params;
     // through
     const include = [
             {model: Usuario, as: 'usuario', attributes: {exclude: ['password']}},
         ];
-    const persona = await Persona.findByPk(id,{include});
-    res.status(200).json({
-        ok: true,
-        persona
-    });
+    try {
+        const persona = await Persona.findByPk(id,{include});
+        res.status(200).json({
+            ok: true,
+            persona
+        });
+    } catch (error) {
+        logger.error(error);
+        res.status(500).json({
+            ok: false,
+            msg:'Hable con el administrador',
+        });
+    }
 }
 
 const showPorRut = async (req = request, res=response) => {
