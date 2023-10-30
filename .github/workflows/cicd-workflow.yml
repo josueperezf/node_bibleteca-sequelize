@@ -27,4 +27,4 @@ jobs:
       - name: Eliminar contenedor antiguo si lo hay
         run: docker rm -f node_biblioteca-sequelize-container
       - name: Crear el contenedor docker con la nueva imagen
-        run: docker run -d -p 3000:80 --name node_biblioteca-sequelize-container josueperezf/node_biblioteca-sequelize
+        run: docker run -d -p 3000:3000 --name node_biblioteca-sequelize-container josueperezf/node_biblioteca-sequelize
