@@ -11,5 +11,4 @@ router.get('/*', rutaNoEncontrada );
 router.get('/api/', rutaNoEncontrada );
 router.get('/api/*', rutaNoEncontrada );
 
-
 module.exports = router;
