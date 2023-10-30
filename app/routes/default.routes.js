@@ -3,7 +3,7 @@ const router = Router();
 
 const rutaNoEncontrada = async (req = request, res = response) => {
     return res.status(404).json({
-        msg:'Ruta no disponible.'
+        msg:'Ruta no disponible'
     });
 };
 
